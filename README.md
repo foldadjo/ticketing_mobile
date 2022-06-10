@@ -76,9 +76,9 @@ URL_CLOUDINARY: "https://res.cloudinary.com/foldadjo",
 
 <br>
 
-## ✍️ itJobs - Backend Link
+## ✍️ Ticketing - Backend Link
 
-https://github.com/thariqfarsha/itjobs-backend.git
+https://github.com/foldadjo/Ticketing_BE.git
 
 <br>
 
