@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -8,11 +8,36 @@ import {
   TextInput,
   Image,
 } from 'react-native';
+// import {useRouter} from 'next/router';
 
 function ForgotPassword(props) {
-  const handleLogin = () => {
-    props.navigation.navigate('Login');
+  // const router = useRouter();
+  const [password, setPassword] = useState('');
+  const [cPass, setCPass] = useState('');
+
+  // const dispatch = useDispatch();
+  // const auth = useSelector(state => state.auth);
+
+  const [form, setForm] = useState({
+    // keyChangePassword: router.query.otp,
+    newPassword: '',
+    confirmPassword: '',
+  });
+
+  useEffect(() => {
+    setForm({newPassword: password, confirmPassword: cPass});
+  }, [cPass, password]);
+
+  const handleLogin = async e => {
+    try {
+      e.preventDefault();
+      console.log(form);
+      props.navigation.navigate('Login');
+    } catch (error) {
+      console.log(error.response);
+    }
   };
+
   return (
     <ScrollView style={forgot.container} showsVerticalScrollIndicator={false}>
       <View style={forgot.row}>
@@ -39,6 +64,8 @@ function ForgotPassword(props) {
             keyboardType="visible-password"
             secureTextEntry={true}
             style={forgot.form}
+            onChangeText={newText => setPassword(newText)}
+            defaultValue={password}
           />
         </View>
         <View>
@@ -49,6 +76,8 @@ function ForgotPassword(props) {
             keyboardType="visible-password"
             secureTextEntry={true}
             style={forgot.form}
+            onChangeText={newText => setCPass(newText)}
+            defaultValue={cPass}
           />
         </View>
       </View>
@@ -67,11 +96,6 @@ const forgot = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 30,
     marginTop: 30,
-  },
-  bg: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   logo: {
     fontSize: 35,

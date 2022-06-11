@@ -11,7 +11,7 @@ import {
   Image,
 } from 'react-native';
 
-function Home(props) {
+function ViewAll(props) {
   const [mail, setMail] = useState('');
   // const [data, setData] = useState([]);
   // const [page, setPage] = useState(1);
@@ -62,77 +62,26 @@ function Home(props) {
   };
   return (
     <ScrollView style={home.container} showsVerticalScrollIndicator={false}>
-      <View style={home.margin}>
-        <Text style={home.tag}>
-          Nearest Cinema, Newest Movie, Find out now!
-        </Text>
-        <Text style={home.title}> Find out now!</Text>
-      </View>
-      <View style={home.center}>
-        <Image source={require('../../assets/home.png')} style={home.image} />
-      </View>
-      <View style={home.showing}>
-        <View style={home.row}>
-          <View style={home.now}>
-            <Text style={home.now_text}>Now Showing</Text>
-          </View>
-          <View style={home.viewAll}>
-            <TouchableOpacity onPress={handleViewAll}>
-              <Text style={home.viewAll_Text}> View All</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <ScrollView horizontal={true} style={home.row}>
-          <View style={home.movie}>
-            <Image
-              source={{
-                uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
-              }}
-              style={home.card_image}
-            />
-            <Text style={home.movie_title}>Dora the lost city</Text>
-            <Text style={home.movie_category}>Adventure</Text>
-            <View style={(home.button, {width: 100})}>
-              <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
-            </View>
-          </View>
-          <View style={home.movie}>
-            <Image
-              source={{
-                uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
-              }}
-              style={home.card_image}
-            />
-            <Text style={home.movie_title}>Dora the lost city</Text>
-            <Text style={home.movie_category}>Adventure</Text>
-            <View style={(home.button, {width: 100})}>
-              <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
-            </View>
-          </View>
-          <View style={home.movie}>
-            <Image
-              source={{
-                uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
-              }}
-              style={home.card_image}
-            />
-            <Text style={home.movie_title}>Dora the lost city</Text>
-            <Text style={home.movie_category}>Adventure</Text>
-            <View style={(home.button, {width: 100})}>
-              <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
-            </View>
-          </View>
-        </ScrollView>
-      </View>
       <View style={home.row}>
         <View style={home.now}>
-          <Text style={home.now_text2}>Upcoming Movie</Text>
+          <Text style={home.now_text2}>List Movie</Text>
         </View>
-        <View style={home.viewAll}>
-          <TouchableOpacity onPress={handleViewAll}>
-            <Text style={home.viewAll_Text}> View All</Text>
-          </TouchableOpacity>
-        </View>
+      </View>
+      <View style={home.row}>
+        <TextInput
+          placeholder="Type your email"
+          autoComplete="email"
+          keyboardType="email-address"
+          onChangeText={newText => setMail(newText)}
+          defaultValue={mail}
+        />
+        <TextInput
+          placeholder="Type your email"
+          autoComplete="email"
+          keyboardType="email-address"
+          onChangeText={newText => setMail(newText)}
+          defaultValue={mail}
+        />
       </View>
       <ScrollView horizontal={true} style={home.row}>
         {month.map(item => (
@@ -315,4 +264,4 @@ const home = StyleSheet.create({
   card_image: {width: 120, height: 180, borderRadius: 5},
 });
 
-export default Home;
+export default ViewAll;

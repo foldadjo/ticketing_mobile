@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -10,8 +10,28 @@ import {
 } from 'react-native';
 
 function ResetPassword(props) {
-  const handlePassword = () => {
-    props.navigation.navigate('ForgotPassword');
+  const [mail, setMail] = useState('');
+  // const dispatch = useDispatch();
+  // const auth = useSelector(state => state.auth);
+
+  const [form, setForm] = useState({
+    email: '',
+  });
+
+  useEffect(() => {
+    setForm({
+      email: mail,
+    });
+  }, [mail]);
+
+  const handlePassword = async e => {
+    try {
+      e.preventDefault();
+      console.log(form);
+      props.navigation.navigate('ForgotPassword');
+    } catch (error) {
+      console.log(error.response);
+    }
   };
   return (
     <ScrollView style={reset.container} showsVerticalScrollIndicator={false}>
@@ -38,6 +58,8 @@ function ResetPassword(props) {
             autoComplete="email"
             keyboardType="email-address"
             style={reset.form}
+            onChangeText={newText => setMail(newText)}
+            defaultValue={mail}
           />
         </View>
       </View>
@@ -56,11 +78,6 @@ const reset = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 30,
     marginTop: 30,
-  },
-  bg: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   logo: {
     fontSize: 35,

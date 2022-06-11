@@ -31,14 +31,15 @@ Website Application Hire Job | Frontend Repository
 2. Set Up your device
 3. Open app's directory in CMD or Terminal
 4. Type `npm install` or `yarn install`
-5. Add .env in nextConfig.js
+5. Type `adb devices` and then Type `adb -s "your emulator"`
+6. Add .env in nextConfig.js
 
 ```sh
 URL_BACKEND: "https://tiketjauhar.herokuapp.com",
 URL_CLOUDINARY: "https://res.cloudinary.com/foldadjo",
 ```
 
-6. Type `npx react-native run-android`
+7. Type `npx react-native run-android`
 
 ## Acknowledgements
 

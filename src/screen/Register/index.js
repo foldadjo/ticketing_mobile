@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -11,9 +11,42 @@ import {
 } from 'react-native';
 
 function Register(props) {
-  const handleRegister = () => {
-    props.navigation.navigate('Login');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [noTelp, setNoTelp] = useState('');
+  const [mail, setMail] = useState('');
+  const [password, setPassword] = useState('');
+  // const dispatch = useDispatch();
+  // const auth = useSelector(state => state.auth);
+
+  const [form, setForm] = useState({
+    firstName: '',
+    lastName: '',
+    noTelp: '',
+    email: '',
+    password: '',
+  });
+
+  useEffect(() => {
+    setForm({
+      firstName: firstName,
+      lastName: lastName,
+      noTelp: noTelp,
+      email: mail,
+      password: password,
+    });
+  }, [firstName, lastName, mail, noTelp, password]);
+
+  const handleRegister = async e => {
+    try {
+      e.preventDefault();
+      console.log(form);
+      props.navigation.navigate('Login');
+    } catch (error) {
+      console.log(error.response);
+    }
   };
+
   const handleLogin = () => {
     props.navigation.navigate('Login');
   };
@@ -37,11 +70,21 @@ function Register(props) {
       <View style={regis.formulir}>
         <View>
           <Text style={regis.name}> First Name </Text>
-          <TextInput placeholder="Write your first Name" style={regis.form} />
+          <TextInput
+            placeholder="Write your first Name"
+            style={regis.form}
+            onChangeText={newText => setFirstName(newText)}
+            defaultValue={firstName}
+          />
         </View>
         <View>
           <Text style={regis.name}> Last Name </Text>
-          <TextInput placeholder="Write your last Name" style={regis.form} />
+          <TextInput
+            placeholder="Write your last Name"
+            style={regis.form}
+            onChangeText={newText => setLastName(newText)}
+            defaultValue={lastName}
+          />
         </View>
         <View>
           <Text style={regis.name}> Phone Number </Text>
@@ -51,6 +94,8 @@ function Register(props) {
             keyboardType="numeric"
             maxLength={15}
             style={regis.form}
+            onChangeText={newText => setNoTelp(newText)}
+            defaultValue={noTelp}
           />
         </View>
         <View>
@@ -60,6 +105,8 @@ function Register(props) {
             autoComplete="email"
             keyboardType="email-address"
             style={regis.form}
+            onChangeText={newText => setMail(newText)}
+            defaultValue={mail}
           />
         </View>
         <View>
@@ -70,6 +117,8 @@ function Register(props) {
             keyboardType="visible-password"
             secureTextEntry={true}
             style={regis.form}
+            onChangeText={newText => setPassword(newText)}
+            defaultValue={password}
           />
         </View>
       </View>
@@ -94,11 +143,6 @@ const regis = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 30,
     marginTop: 30,
-  },
-  bg: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   logo: {
     fontSize: 35,

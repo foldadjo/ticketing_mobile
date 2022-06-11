@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+// import {useDispatch, useSelector} from 'react-redux';
+import Cookies from 'js-cookie';
 import {
   View,
   Text,
@@ -11,8 +13,33 @@ import {
 } from 'react-native';
 
 function Login(props) {
-  const handleLogin = () => {
-    props.navigation.navigate('AppScreen', {screen: 'home'});
+  const [mail, setMail] = useState('');
+  const [password, setPassword] = useState('');
+  // const dispatch = useDispatch();
+  // const auth = useSelector(state => state.auth);
+
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+  });
+
+  useEffect(() => {
+    setForm({email: mail, password: password});
+  }, [mail, password]);
+
+  const handleLogin = async e => {
+    try {
+      e.preventDefault();
+      // const result = await dispatch(login(form));
+      console.log(form);
+      // Cookies.set('token', result.value.data.data.token);
+      // Cookies.set('refreshToken', result.value.data.data.refreshToken);
+      // Cookies.set('id', result.value.data.data.id);
+
+      props.navigation.navigate('AppScreen', {screen: 'home'});
+    } catch (error) {
+      console.log(error.response);
+    }
   };
   const handleRegister = () => {
     props.navigation.navigate('Register');
@@ -39,6 +66,15 @@ function Login(props) {
           Sign in with your data that you entered during your registration.
         </Text>
       </View>
+      {/* {!auth.msg ? null : auth.isError ? (
+        <div className="alert alert-danger" role="alert">
+          {auth.msg}
+        </div>
+      ) : (
+        <div className="alert alert-primary" role="alert">
+          {auth.msg}
+        </div>
+      )} */}
       <View style={login.formulir}>
         <View>
           <Text style={login.name}> Email </Text>
@@ -47,6 +83,8 @@ function Login(props) {
             autoComplete="email"
             keyboardType="email-address"
             style={login.form}
+            onChangeText={newText => setMail(newText)}
+            defaultValue={mail}
           />
         </View>
         <View>
@@ -57,6 +95,8 @@ function Login(props) {
             keyboardType="visible-password"
             secureTextEntry={true}
             style={login.form}
+            onChangeText={newText => setPassword(newText)}
+            defaultValue={password}
           />
         </View>
       </View>
@@ -87,11 +127,6 @@ const login = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 30,
     marginTop: 30,
-  },
-  bg: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   logo: {
     fontSize: 35,
