@@ -50,12 +50,12 @@ function ViewAll(props) {
           onSelect={(selectedItem, index) => {
             console.log(selectedItem, index);
           }}
-          // buttonTextAfterSelection={(selectedItem, index) => {
-          //   return selectedItem;
-          // }}
-          // rowTextForSelection={(item, index) => {
-          //   return item;
-          // }}
+          buttonTextAfterSelection={(selectedItem, index) => {
+            return selectedItem;
+          }}
+          rowTextForSelection={(item, index) => {
+            return item;
+          }}
           buttonStyle={view.sorting}
           defaultButtonText="Sort"
           // searchPlaceHolderColor="red"

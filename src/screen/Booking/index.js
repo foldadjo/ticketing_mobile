@@ -13,7 +13,7 @@ import {
   Image,
 } from 'react-native';
 
-function Detail(props) {
+function Booking(props) {
   const [date, setDate] = useState(new Date());
   const [button, setButton] = useState(false);
   const [open, setOpen] = useState(false);
@@ -404,4 +404,4 @@ const detail = StyleSheet.create({
   },
 });
 
-export default Detail;
+export default Booking;

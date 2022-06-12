@@ -4,6 +4,7 @@ const Stack = createNativeStackNavigator();
 import Home from '../screen/Home';
 import ViewAll from '../screen/ViewAll';
 import Detail from '../screen/Detail';
+import Booking from '../screen/Booking';
 
 function AppNavigator() {
   return (
@@ -21,6 +22,11 @@ function AppNavigator() {
       <Stack.Screen
         component={Detail}
         name="Detail"
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        component={Booking}
+        name="Booking"
         options={{headerShown: false}}
       />
     </Stack.Navigator>
