@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 // import {useDispatch, useSelector} from 'react-redux';
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 import {
   View,
   Text,
@@ -30,12 +30,7 @@ function Login(props) {
   const handleLogin = async e => {
     try {
       e.preventDefault();
-      // const result = await dispatch(login(form));
       console.log(form);
-      // Cookies.set('token', result.value.data.data.token);
-      // Cookies.set('refreshToken', result.value.data.data.refreshToken);
-      // Cookies.set('id', result.value.data.data.id);
-
       props.navigation.navigate('AppScreen', {screen: 'home'});
     } catch (error) {
       console.log(error.response);

@@ -1,6 +1,5 @@
 const initialState = {
   data: [],
-  // otherData: [], //other data if needed
   isLoading: false,
   isError: false,
   msg: '',

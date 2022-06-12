@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 // import axios from '../../utils/axios';
+import SelectDropdown from 'react-native-select-dropdown';
 import {
   View,
   Text,
@@ -12,10 +13,11 @@ import {
 } from 'react-native';
 
 function ViewAll(props) {
-  const [mail, setMail] = useState('');
+  const [search, setSearch] = useState('');
   // const [data, setData] = useState([]);
   // const [page, setPage] = useState(1);
-  // const limit = 10;
+  const countries = ['Sort', 'A to Z', 'Z to A'];
+
   const month = [
     {number: 1, title: 'Januari'},
     {number: 2, title: 'Februari'},
@@ -30,181 +32,154 @@ function ViewAll(props) {
     {number: 11, title: 'November'},
     {number: 12, title: 'Desember'},
   ];
-  // useEffect(() => {
-  //   getdataMovie();
-  // }, [getdataMovie, page]);
 
-  // const getdataMovie = async e => {
-  //   try {
-  //     e.preventDefault();
-  //     const resultMovie = await axios.get(`movie?page=${page}&limit=${limit}`);
-  //     setData(resultMovie.data.data);
-  //   } catch (error) {
-  //     console.log(error.response);
-  //   }
-  // };
-
-  const handlemail = async e => {
-    try {
-      e.preventDefault();
-      // const resultLogin = await axios.post("auth/login", form);
-      // dispatch(getUserById(resultLogin.data.data.id));
-      console.log(mail);
-    } catch (error) {
-      console.log(error.response);
-    }
-  };
-  const handleViewAll = () => {
-    props.navigation.navigate('ViewAll');
-  };
   const handleDetail = () => {
     props.navigation.navigate('Detail');
   };
   return (
-    <ScrollView style={home.container} showsVerticalScrollIndicator={false}>
-      <View style={home.row}>
-        <View style={home.now}>
-          <Text style={home.now_text2}>List Movie</Text>
+    <ScrollView style={view.container} showsVerticalScrollIndicator={false}>
+      <View style={view.row}>
+        <View style={view.now}>
+          <Text style={view.now_text}>List Movie</Text>
         </View>
       </View>
-      <View style={home.row}>
-        <TextInput
-          placeholder="Type your email"
-          autoComplete="email"
-          keyboardType="email-address"
-          onChangeText={newText => setMail(newText)}
-          defaultValue={mail}
+      <View style={view.row}>
+        {/* <View style={view.sorting}> */}
+        <SelectDropdown
+          data={countries}
+          onSelect={(selectedItem, index) => {
+            console.log(selectedItem, index);
+          }}
+          // buttonTextAfterSelection={(selectedItem, index) => {
+          //   return selectedItem;
+          // }}
+          // rowTextForSelection={(item, index) => {
+          //   return item;
+          // }}
+          buttonStyle={view.sorting}
+          defaultButtonText="Sort"
+          // searchPlaceHolderColor="red"
         />
-        <TextInput
-          placeholder="Type your email"
-          autoComplete="email"
-          keyboardType="email-address"
-          onChangeText={newText => setMail(newText)}
-          defaultValue={mail}
-        />
+        {/* </View> */}
+        <View style={view.filtering}>
+          <TextInput
+            placeholder="Search movie name"
+            autoComplete="off"
+            keyboardType="default"
+            onChangeText={newText => setSearch(newText)}
+            defaultValue={search}
+          />
+        </View>
       </View>
-      <ScrollView horizontal={true} style={home.row}>
+      <ScrollView horizontal={true} style={view.row}>
         {month.map(item => (
-          <TouchableOpacity style={home.month}>
-            <Text style={home.month_text}>{item.title}</Text>
+          <TouchableOpacity style={view.month}>
+            <Text style={view.month_text}>{item.title}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <ScrollView horizontal={true} style={home.row}>
-        <View style={home.movie}>
+      <View style={view.row}>
+        <View style={view.movie}>
           <Image
             source={{
               uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
             }}
-            style={home.card_image}
+            style={view.card_image}
           />
-          <Text style={home.movie_title}>Dora the lost city</Text>
-          <Text style={home.movie_category}>Adventure</Text>
-          <View style={(home.button, {width: 100})}>
+          <Text style={view.movie_title}>Dora the lost city</Text>
+          <Text style={view.movie_category}>Adventure</Text>
+          <View style={(view.button, {width: 100})}>
             <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
           </View>
         </View>
-        <View style={home.movie}>
+        <View style={view.movie}>
           <Image
             source={{
               uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
             }}
-            style={home.card_image}
+            style={view.card_image}
           />
-          <Text style={home.movie_title}>Dora the lost city</Text>
-          <Text style={home.movie_category}>Adventure</Text>
-          <View style={(home.button, {width: 100})}>
+          <Text style={view.movie_title}>Dora the lost city</Text>
+          <Text style={view.movie_category}>Adventure</Text>
+          <View style={(view.button, {width: 100})}>
             <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
           </View>
         </View>
-        <View style={home.movie}>
+        <View style={view.movie}>
           <Image
             source={{
               uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
             }}
-            style={home.card_image}
+            style={view.card_image}
           />
-          <Text style={home.movie_title}>Dora the lost city</Text>
-          <Text style={home.movie_category}>Adventure</Text>
-          <View style={(home.button, {width: 100})}>
+          <Text style={view.movie_title}>Dora the lost city</Text>
+          <Text style={view.movie_category}>Adventure</Text>
+          <View style={(view.button, {width: 100})}>
             <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
           </View>
         </View>
-      </ScrollView>
-      <View style={home.margin}>
-        <View style={home.card}>
-          <Text style={home.tag}>Be the vanguard of the</Text>
-          <Text style={home.title}> Moviegoers </Text>
-          <View style={home.formulir}>
-            <TextInput
-              placeholder="Type your email"
-              autoComplete="email"
-              keyboardType="email-address"
-              style={home.form}
-              onChangeText={newText => setMail(newText)}
-              defaultValue={mail}
-            />
+        <View style={view.movie}>
+          <Image
+            source={{
+              uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
+            }}
+            style={view.card_image}
+          />
+          <Text style={view.movie_title}>Dora the lost city</Text>
+          <Text style={view.movie_category}>Adventure</Text>
+          <View style={(view.button, {width: 100})}>
+            <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
           </View>
-          <View style={home.button}>
-            <Button title="Join Now" color={'#5F2EEA'} onPress={handlemail} />
-          </View>
-          <Text style={(home.tag, {lineHeight: 20, textAlign: 'center'})}>
-            By joining you as a Tickitz member, {'\n'} we will always send you
-            the {'\n'}
-            latest latest updates via email .
-          </Text>
         </View>
       </View>
     </ScrollView>
   );
 }
 
-const home = StyleSheet.create({
+const view = StyleSheet.create({
   container: {
     paddingTop: 50,
+    paddingBottom: 50,
     backgroundColor: 'white',
   },
   row: {
     flexDirection: 'row',
     margin: 30,
     marginBottom: 10,
-  },
-  margin: {
-    marginLeft: 25,
-    marginRight: 25,
-  },
-  tag: {
-    fontSize: 12,
-    fontWeight: '500',
-    marginLeft: 10,
+    flexWrap: 'wrap',
   },
   title: {
     fontSize: 35,
     color: '#5F2EEA',
     fontWeight: '600',
   },
-  center: {
-    alignItems: 'center',
-    margin: 50,
-  },
-  image: {
-    width: 300,
-    height: 340,
-  },
-  showing: {backgroundColor: '#D6D8E7', paddingBottom: 20},
   now: {flex: 2},
-  now_text: {color: '#5F2EEA', fontSize: 25, fontWeight: '500'},
-  now_text2: {color: 'black', fontSize: 25, fontWeight: '500'},
-  viewAll: {flex: 1, alignItems: 'flex-end', top: 10},
-  viewAll_Text: {color: '#5F2EEA'},
+  now_text: {color: 'black', fontSize: 25, fontWeight: '500'},
+  sorting: {
+    flex: 1,
+    borderColor: '#5F2EEA',
+    borderWidth: 1,
+
+    borderRadius: 10,
+    backgroundColor: 'white',
+  },
+  filtering: {
+    flex: 3,
+    borderColor: '#5F2EEA',
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingLeft: 15,
+    marginLeft: 10,
+  },
   movie: {
-    width: 150,
+    width: 140,
     height: 300,
     backgroundColor: 'white',
     borderRadius: 10,
     borderColor: '#D6D8E7',
     borderWidth: 1,
     marginRight: 10,
+    marginBottom: 20,
     padding: 10,
     alignItems: 'center',
   },
@@ -229,18 +204,6 @@ const home = StyleSheet.create({
     color: '#5F2EEA',
     fontWeight: '500',
   },
-
-  formulir: {marginTop: 20},
-  form: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#8692A6',
-    borderRadius: 8,
-    borderWidth: 1,
-    padding: 5,
-    paddingLeft: 20,
-    marginTop: 10,
-    width: 250,
-  },
   button: {
     backgroundColor: '#5F2EEA',
     color: 'white',
@@ -249,17 +212,6 @@ const home = StyleSheet.create({
     marginBottom: 15,
     padding: 5,
     width: 250,
-  },
-  card: {
-    alignItems: 'center',
-    backgroundColor: 'white',
-    paddingTop: 50,
-    paddingBottom: 50,
-    borderRadius: 10,
-    shadowOffset: 30,
-    shadowOpacity: 10,
-    shadowColor: '#FFFFFF',
-    marginBottom: 30,
   },
   card_image: {width: 120, height: 180, borderRadius: 5},
 });
