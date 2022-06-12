@@ -57,7 +57,7 @@ function Booking(props) {
               <View style={payment.btn}>
                 <Text style={payment.texttr}>or</Text>
               </View>
-              <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+              <View style={payment.texttr1}>
                 <View>
                   <Text style={payment.textleft}>Pay via cast. </Text>
                 </View>
@@ -198,6 +198,7 @@ const payment = StyleSheet.create({
   texttr: {
     marginVertical: 15,
   },
+  texttr1: {flexDirection: 'row', justifyContent: 'center'},
   text1: {color: '#5F2EEA'},
   textleft: {
     color: '#D6D8E7',
