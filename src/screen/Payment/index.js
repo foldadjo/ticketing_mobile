@@ -55,9 +55,6 @@ function Booking(props) {
     }
   };
   console.log(selectedSeat);
-  const handlePayment = () => {
-    props.navigation.navigate('Payment');
-  };
   return (
     <ScrollView style={booking.container} showsVerticalScrollIndicator={false}>
       <View style={booking.bottom}>
@@ -221,7 +218,7 @@ function Booking(props) {
             <Button
               title="Checkout now"
               color={'#5F2EEA'}
-              onPress={handlePayment}
+              //   onPress={handleSchedule}
             />
           </View>
         </View>

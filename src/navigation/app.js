@@ -5,6 +5,7 @@ import Home from '../screen/Home';
 import ViewAll from '../screen/ViewAll';
 import Detail from '../screen/Detail';
 import Booking from '../screen/Booking';
+import Payment from '../screen/Payment';
 
 function AppNavigator() {
   return (
@@ -27,6 +28,11 @@ function AppNavigator() {
       <Stack.Screen
         component={Booking}
         name="Booking"
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        component={Payment}
+        name="Payment"
         options={{headerShown: false}}
       />
     </Stack.Navigator>
