@@ -8,239 +8,146 @@ import {
   TouchableOpacity,
   Button,
   ScrollView,
-  // TextInput,
+  TextInput,
   Image,
 } from 'react-native';
 
 function Booking(props) {
-  const [selectedSeat, setSelectedSeat] = useState([]);
-  const [reservedSeat, setReservedSeat] = useState(['A3', 'G8', 'F12']);
-  const [price, setPrice] = useState(50000);
-  const seatLeft = [
-    {number: 1},
-    {number: 2},
-    {number: 3},
-    {number: 4},
-    {number: 5},
-    {number: 6},
-    {number: 7},
-  ];
-  const seatRight = [
-    {number: 8},
-    {number: 9},
-    {number: 10},
-    {number: 11},
-    {number: 12},
-    {number: 13},
-    {number: 14},
-  ];
-  const seatRow = [
-    {row: 'A'},
-    {row: 'B'},
-    {row: 'C'},
-    {row: 'D'},
-    {row: 'E'},
-    {row: 'F'},
-    {row: 'G'},
-  ];
+  const [lastName, setLastName] = useState('');
+  const [noTelp, setNoTelp] = useState('');
+  const [mail, setMail] = useState('');
 
-  const handlePressSeat = seat => {
-    if (selectedSeat.includes(seat) || selectedSeat.length > 4) {
-      const deleteSeat = selectedSeat.filter(el => {
-        return el !== seat;
-      });
-      setSelectedSeat(deleteSeat);
-    } else {
-      setSelectedSeat([...selectedSeat, seat]);
-    }
-  };
-  console.log(selectedSeat);
   return (
-    <ScrollView style={booking.container} showsVerticalScrollIndicator={false}>
-      <View style={booking.bottom}>
-        <View style={booking.head}>
-          <Text style={booking.head_name}>Chose your seat</Text>
+    <View>
+      <ScrollView
+        style={payment.container}
+        showsVerticalScrollIndicator={false}>
+        <View style={payment.pay}>
+          <Text style={payment.textleft}>Total Payment</Text>
+          <Text style={payment.textright}>Rp.200000</Text>
         </View>
-        <View style={booking.flex}>
-          <View style={booking.card}>
-            <View style={booking.card_head}>
-              <View style={booking.screen}>
-                <View style={booking.seat}>
-                  {seatLeft.map(row => (
-                    <View>
-                      {seatRow.map(item => (
-                        <TouchableOpacity
-                          style={
-                            selectedSeat.includes(item.row + row.number)
-                              ? booking.seat_b
-                              : reservedSeat.includes(item.row + row.number)
-                              ? booking.seat_c
-                              : booking.seat_a
-                          }
-                          onPress={() =>
-                            handlePressSeat(item.row + row.number)
-                          }>
-                          <Text> </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </View>
-                  ))}
-                </View>
-                <View style={booking.seat}>
-                  {seatRight.map(row => (
-                    <View>
-                      {seatRow.map(item => (
-                        <TouchableOpacity
-                          style={
-                            selectedSeat.includes(item.row + row.number)
-                              ? booking.seat_b
-                              : reservedSeat.includes(item.row + row.number)
-                              ? booking.seat_c
-                              : booking.seat_a
-                          }
-                          onPress={() =>
-                            handlePressSeat(item.row + row.number)
-                          }>
-                          <Text> </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </View>
-                  ))}
-                </View>
-              </View>
-            </View>
-            <View>
-              <Text style={booking.head_name}>Seating key</Text>
-            </View>
-            <View style={booking.row}>
-              <View style={booking.flex2}>
-                <View style={booking.row}>
-                  <Image
-                    source={{
-                      uri: 'https://cdn-icons-png.flaticon.com/512/545/545678.png',
-                    }}
-                    style={booking.icon}
-                  />
-                  <Text>{'  '}A to G</Text>
-                </View>
-                <View style={booking.row}>
-                  <View style={booking.seat_a}>
-                    <Text> </Text>
-                  </View>
-                  <Text>{'  '}Available</Text>
-                </View>
-                <View style={booking.row}>
-                  <View style={booking.seat_c}>
-                    <Text> </Text>
-                  </View>
-                  <Text>{'  '}Sold</Text>
-                </View>
-              </View>
-              <View style={booking.flex3}>
-                <View style={booking.row}>
-                  <Image
-                    source={{
-                      uri: 'https://cdn-icons-png.flaticon.com/512/545/545682.png',
-                    }}
-                    style={booking.icon}
-                  />
-                  <Text>{'   '}1 to 14</Text>
-                </View>
-                <View style={booking.row}>
-                  <View style={booking.seat_b}>
-                    <Text> </Text>
-                  </View>
-                  <Text>{'  '}Selected</Text>
-                </View>
-              </View>
-            </View>
-            <Text style={booking.textleft}>max seat booking is 5</Text>
+        <View style={payment.bottom}>
+          <View style={payment.head}>
+            <Text style={payment.head_name}>Payment Method</Text>
           </View>
-        </View>
-        <View style={booking.head}>
-          <Text style={booking.head_name}>Order Info</Text>
-        </View>
-        <View style={booking.flex}>
-          <View style={booking.card}>
-            <View style={booking.card_head}>
-              <Image
-                source={require('../../assets/cineone.png')}
-                style={booking.card_premiere}
+          <View style={payment.flex}>
+            <View style={payment.cardpay}>
+              <View style={payment.cardpay_pay}>
+                <TouchableOpacity style={payment.cardpay_pay1}>
+                  <Image source={require('../../assets/gpay.png')} />
+                </TouchableOpacity>
+                <TouchableOpacity style={payment.cardpay_pay1}>
+                  <Image source={require('../../assets/visa.png')} />
+                </TouchableOpacity>
+                <TouchableOpacity style={payment.cardpay_pay1}>
+                  <Image source={require('../../assets/gopay.png')} />
+                </TouchableOpacity>
+              </View>
+              <View style={payment.cardpay_pay}>
+                <TouchableOpacity style={payment.cardpay_pay1}>
+                  <Image source={require('../../assets/paypal.png')} />
+                </TouchableOpacity>
+                <TouchableOpacity style={payment.cardpay_pay1}>
+                  <Image source={require('../../assets/ovo.png')} />
+                </TouchableOpacity>
+                <TouchableOpacity style={payment.cardpay_pay1}>
+                  <Image source={require('../../assets/dana.png')} />
+                </TouchableOpacity>
+              </View>
+              <View style={payment.btn}>
+                <Text style={payment.texttr}>or</Text>
+              </View>
+              <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                <View>
+                  <Text style={payment.textleft}>Pay via cast. </Text>
+                </View>
+                <View>
+                  <TouchableOpacity>
+                    <Text style={payment.text1}>See how it work</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View style={payment.head}>
+            <Text style={payment.head_name}>Personal Info</Text>
+          </View>
+          <View style={payment.flex}>
+            <View style={payment.cardinfo}>
+              <View>
+                <Text style={payment.name}> Full Name </Text>
+                <TextInput
+                  placeholder="Write your fullname"
+                  style={payment.form}
+                  onChangeText={newText => setLastName(newText)}
+                  defaultValue={lastName}
+                />
+              </View>
+              <View>
+                <Text style={payment.name}> Email </Text>
+                <TextInput
+                  placeholder="Write your email"
+                  autoComplete="email"
+                  keyboardType="email-address"
+                  style={payment.form}
+                  onChangeText={newText => setMail(newText)}
+                  defaultValue={mail}
+                />
+              </View>
+              <View>
+                <Text style={payment.name}> Phone Number </Text>
+                <TextInput
+                  placeholder="Write your phone number"
+                  autoComplete="tel"
+                  keyboardType="numeric"
+                  maxLength={15}
+                  style={payment.form}
+                  onChangeText={newText => setNoTelp(newText)}
+                  defaultValue={noTelp}
+                />
+              </View>
+              <View style={payment.warning}>
+                <Image source={require('../../assets/warning.png')} />
+                <Text>{'    '}Fill your data correctly.</Text>
+              </View>
+            </View>
+          </View>
+          <View style={payment.btn}>
+            <View style={payment.button}>
+              <Button
+                title="Pay your order"
+                color={'#5F2EEA'}
+                //   onPress={handleSchedule}
               />
-              <View>
-                <Text style={booking.text1}> CineOne 21 Cinema </Text>
-              </View>
-              <View>
-                <Text style={booking.text2}> Dora the lost city </Text>
-              </View>
-            </View>
-            <View style={booking.row}>
-              <View style={booking.flex3}>
-                <Text style={booking.textleft}>Tuesday, 07 july 2022</Text>
-              </View>
-              <View style={booking.flex2}>
-                <Text style={booking.textright}>19.00</Text>
-              </View>
-            </View>
-            <View style={booking.row}>
-              <View style={booking.flex3}>
-                <Text style={booking.textleft}>One ticket price</Text>
-              </View>
-              <View style={booking.flex2}>
-                <Text style={booking.textright}>Rp. {price}</Text>
-              </View>
-            </View>
-            <View style={booking.row}>
-              <View style={booking.flex3}>
-                <Text style={booking.textleft}>Seat choosed</Text>
-              </View>
-              <View style={booking.flex2}>
-                <Text style={booking.textright}>
-                  {selectedSeat.length === 0 ? '-' : selectedSeat.join(', ')}
-                </Text>
-              </View>
-            </View>
-            <View style={booking.hr} />
-            <View style={booking.row}>
-              <View style={booking.flex3}>
-                <Text style={booking.textleft2}>Total Payment</Text>
-              </View>
-              <View style={booking.flex2}>
-                <Text style={booking.textright2}>
-                  Rp. {selectedSeat.length * price}
-                </Text>
-              </View>
             </View>
           </View>
         </View>
-        <View style={booking.btn}>
-          <View style={booking.button}>
-            <Button
-              title="Checkout now"
-              color={'#5F2EEA'}
-              //   onPress={handleSchedule}
-            />
-          </View>
-        </View>
-
-        <View style={booking.hr} />
-      </View>
-      <View style={booking.hr} />
-      {/* <View style={booking.hr} />
-      <View style={booking.hr} /> */}
-    </ScrollView>
+        <View style={payment.hr} />
+      </ScrollView>
+    </View>
   );
 }
 
-const booking = StyleSheet.create({
+const payment = StyleSheet.create({
   container: {
     paddingBottom: 50,
-    backgroundColor: 'white',
+    backgroundColor: '#F5F6F8',
   },
   bottom: {
     padding: 30,
     backgroundColor: '#F5F6F8',
-    marginTop: 50,
+    // top: 20,
+  },
+  pay: {
+    height: 80,
+    backgroundColor: 'white',
+    borderBottomRightRadius: 30,
+    borderBottomLeftRadius: 30,
+    width: 360,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 30,
+    paddingHorizontal: 50,
   },
   head: {
     alignItems: 'flex-start',
@@ -265,8 +172,8 @@ const booking = StyleSheet.create({
   flex: {
     alignItems: 'center',
   },
-  card: {
-    height: 380,
+  cardpay: {
+    height: 220,
     width: 290,
     marginTop: 30,
     padding: 30,
@@ -274,78 +181,24 @@ const booking = StyleSheet.create({
     borderRadius: 10,
     // alignItems: 'center',
   },
-  screen: {
-    borderTopColor: '#5F2EEA',
-    borderTopWidth: 5,
-    borderLeftColor: 'green',
-    borderLeftWidth: 1,
-    width: 250,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 5,
-    paddingBottom: 0,
-    marginBottom: 10,
-  },
-  seat: {
-    width: 110,
-    height: 120,
-    padding: 5,
-    paddingBottom: 10,
-    borderBottomColor: 'red',
-    borderBottomWidth: 1,
+  cardpay_pay: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  seat_a: {
-    backgroundColor: '#D6D8E7',
-    borderRadius: 3,
-    width: 12,
-    height: 13,
-    marginBottom: 2,
-    // mergin: 5,
-  },
-  seat_b: {
-    backgroundColor: '#5F2EEA',
-    borderRadius: 3,
-    width: 12,
-    height: 13,
-    marginBottom: 2,
-  },
-  seat_c: {
-    backgroundColor: '#6E7191',
-    borderRadius: 3,
-    width: 12,
-    height: 13,
-    marginBottom: 2,
-  },
-  card_head: {
+  cardpay_pay1: {
     alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10,
+    width: 70,
+    height: 30,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: '#D6D8E7',
   },
-  row: {
-    flexDirection: 'row',
-    marginVertical: 8,
+  texttr: {
+    marginVertical: 15,
   },
-  icon: {width: 18, height: 18},
-  card_premiere: {
-    marginBottom: 5,
-  },
-  flex3: {
-    flex: 3,
-  },
-  flex2: {
-    flex: 2,
-  },
-  text1: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: 'black',
-    lineHeight: 40,
-  },
-  text2: {
-    fontWeight: '600',
-    color: 'black',
-    marginBottom: 10,
-  },
+  text1: {color: '#5F2EEA'},
   textleft: {
     color: '#D6D8E7',
   },
@@ -353,16 +206,31 @@ const booking = StyleSheet.create({
     textAlign: 'right',
     fontWeight: '600',
   },
-  textleft2: {
-    color: 'black',
-    fontSize: 15,
-    fontWeight: '500',
+  cardinfo: {
+    height: 500,
+    width: 290,
+    marginTop: 30,
+    padding: 30,
+    paddingTop: 10,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    // alignItems: 'center',
   },
-  textright2: {
-    color: '#5F2EEA',
-    fontSize: 15,
-    textAlign: 'right',
-    fontWeight: '600',
+  name: {fontSize: 15, marginTop: 25},
+  form: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#8692A6',
+    borderRadius: 8,
+    borderWidth: 1,
+    padding: 15,
+    marginTop: 10,
+  },
+  warning: {
+    marginVertical: 30,
+    backgroundColor: '#F4B7404D',
+    padding: 15,
+    borderRadius: 10,
+    flexDirection: 'row',
   },
   btn: {alignItems: 'center'},
   button: {
