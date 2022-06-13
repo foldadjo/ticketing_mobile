@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-// import {useDispatch, useSelector} from 'react-redux';
-// import Cookies from 'js-cookie';
+import axios from '../../utils/axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   View,
   Text,
@@ -29,8 +29,12 @@ function Login(props) {
 
   const handleLogin = async e => {
     try {
-      e.preventDefault();
       console.log(form);
+      const result = await axios.post('auth/login', form);
+      console.log(result);
+      await AsyncStorage.setItem('token', result.data.data.token);
+      await AsyncStorage.setItem('refreshToken', result.data.data.refreshToken);
+      await AsyncStorage.setItem('id', result.data.data.id);
       props.navigation.navigate('AppScreen', {screen: 'home'});
     } catch (error) {
       console.log(error.response);

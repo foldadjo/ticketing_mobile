@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Cookies from 'js-cookie';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const axiosApiIntances = axios.create({
   baseURL: 'https://tiketjauhar.herokuapp.com',
@@ -8,10 +8,11 @@ const axiosApiIntances = axios.create({
 
 // Add a request interceptor
 axiosApiIntances.interceptors.request.use(
-  function (config) {
+  async function (config) {
     // Do something before request is sent
+    const token = await AsyncStorage.getItem('token');
     config.headers = {
-      Authorization: `Bearer ${Cookies.get('token')}`,
+      Authorization: `Bearer ${token}`,
     };
     return config;
   },
@@ -28,30 +29,28 @@ axiosApiIntances.interceptors.response.use(
     // Do something with response data
     return response;
   },
-  function (error) {
+  async function (error) {
+    const refreshToken = await AsyncStorage.getItem('refreshToken');
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     if (error.response.status === 403) {
-      if (error.response.data.msg !== 'jwt expired') {
-        Cookies.remove('id');
-        Cookies.remove('token');
-        Cookies.remove('refreshToken');
-        window.location.href = 'login';
-      } else {
-        const refreshToken = Cookies.get('refreshToken');
+      if (error.response.data.msg === 'jwt expired') {
         axiosApiIntances
           .post('auth/refresh', {refreshToken})
-          .then(res => {
-            Cookies.set('token', res.data.data.token);
-            Cookies.set('refreshToken', res.data.data.refreshToken);
-            window.location.reload();
+          .then(async res => {
+            await AsyncStorage.setItem('token', res.data.data.token);
+            await AsyncStorage.setItem(
+              'refreshToken',
+              res.data.data.refreshToken,
+            );
           })
-          .catch(() => {
-            Cookies.remove('id');
-            Cookies.remove('token');
-            Cookies.remove('refreshToken');
-            window.location.href = '/login';
+          .catch(async err => {
+            await AsyncStorage.removeItem('token');
+            await AsyncStorage.removeItem('refreshToken');
           });
+      } else {
+        await AsyncStorage.removeItem('token');
+        await AsyncStorage.removeItem('refreshToken');
       }
     }
     return Promise.reject(error);
