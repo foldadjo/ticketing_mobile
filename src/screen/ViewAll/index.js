@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import Footer from '../../component/footer';
 // import axios from '../../utils/axios';
 import SelectDropdown from 'react-native-select-dropdown';
 import {
@@ -132,14 +133,14 @@ function ViewAll(props) {
           </View>
         </View>
       </View>
+      <Footer />
     </ScrollView>
   );
 }
 
 const view = StyleSheet.create({
   container: {
-    paddingTop: 50,
-    paddingBottom: 50,
+    marginBottom: -50,
     backgroundColor: 'white',
   },
   row: {

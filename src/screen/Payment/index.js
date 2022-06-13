@@ -1,5 +1,5 @@
-/* eslint-disable no-unused-vars */
 import React, {useState, useEffect} from 'react';
+import Footer from '../../component/footer';
 // import axios from '../../utils/axios';
 import {
   View,
@@ -122,7 +122,7 @@ function Booking(props) {
             </View>
           </View>
         </View>
-        <View style={payment.hr} />
+        <Footer />
       </ScrollView>
     </View>
   );
@@ -130,7 +130,7 @@ function Booking(props) {
 
 const payment = StyleSheet.create({
   container: {
-    paddingBottom: 50,
+    marginBottom: -50,
     backgroundColor: '#F5F6F8',
   },
   bottom: {

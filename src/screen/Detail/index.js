@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import Footer from '../../component/footer';
 // import axios from '../../utils/axios';
 import SelectDropdown from 'react-native-select-dropdown';
 import DatePicker from 'react-native-date-picker';
@@ -250,9 +251,7 @@ function Detail(props) {
           <Text style={detail.viewAll}>View All</Text>
         </TouchableOpacity>
       </View>
-      <View style={detail.hr} />
-      <View style={detail.hr} />
-      <View style={detail.hr} />
+      <Footer />
     </ScrollView>
   );
 }

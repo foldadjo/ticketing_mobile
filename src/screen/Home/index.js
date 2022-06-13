@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 // import axios from '../../utils/axios';
+import Footer from '../../component/footer';
+
 import {
   View,
   Text,
@@ -206,6 +208,7 @@ function Home(props) {
           </Text>
         </View>
       </View>
+      <Footer />
     </ScrollView>
   );
 }
@@ -221,8 +224,7 @@ const home = StyleSheet.create({
     marginBottom: 10,
   },
   margin: {
-    marginLeft: 25,
-    marginRight: 25,
+    marginHorizontal: 25,
   },
   tag: {
     fontSize: 12,
@@ -304,8 +306,7 @@ const home = StyleSheet.create({
   card: {
     alignItems: 'center',
     backgroundColor: 'white',
-    paddingTop: 50,
-    paddingBottom: 50,
+    paddingVertical: 50,
     borderRadius: 10,
     shadowOffset: 30,
     shadowOpacity: 10,

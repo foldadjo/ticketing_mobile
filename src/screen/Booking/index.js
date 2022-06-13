@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, {useState, useEffect} from 'react';
+import Footer from '../../component/footer';
 // import axios from '../../utils/axios';
 import {
   View,
@@ -59,191 +60,190 @@ function Booking(props) {
     props.navigation.navigate('Payment');
   };
   return (
-    <ScrollView style={booking.container} showsVerticalScrollIndicator={false}>
-      <View style={booking.bottom}>
-        <View style={booking.head}>
-          <Text style={booking.head_name}>Chose your seat</Text>
-        </View>
-        <View style={booking.flex}>
-          <View style={booking.card}>
-            <View style={booking.card_head}>
-              <View style={booking.screen}>
-                <View style={booking.seat}>
-                  {seatLeft.map(row => (
-                    <View>
-                      {seatRow.map(item => (
-                        <TouchableOpacity
-                          style={
-                            selectedSeat.includes(item.row + row.number)
-                              ? booking.seat_b
-                              : reservedSeat.includes(item.row + row.number)
-                              ? booking.seat_c
-                              : booking.seat_a
-                          }
-                          onPress={() =>
-                            handlePressSeat(item.row + row.number)
-                          }>
-                          <Text> </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </View>
-                  ))}
-                </View>
-                <View style={booking.seat}>
-                  {seatRight.map(row => (
-                    <View>
-                      {seatRow.map(item => (
-                        <TouchableOpacity
-                          style={
-                            selectedSeat.includes(item.row + row.number)
-                              ? booking.seat_b
-                              : reservedSeat.includes(item.row + row.number)
-                              ? booking.seat_c
-                              : booking.seat_a
-                          }
-                          onPress={() =>
-                            handlePressSeat(item.row + row.number)
-                          }>
-                          <Text> </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </View>
-                  ))}
-                </View>
-              </View>
-            </View>
-            <View>
-              <Text style={booking.head_name}>Seating key</Text>
-            </View>
-            <View style={booking.row}>
-              <View style={booking.flex2}>
-                <View style={booking.row}>
-                  <Image
-                    source={{
-                      uri: 'https://cdn-icons-png.flaticon.com/512/545/545678.png',
-                    }}
-                    style={booking.icon}
-                  />
-                  <Text>{'  '}A to G</Text>
-                </View>
-                <View style={booking.row}>
-                  <View style={booking.seat_a}>
-                    <Text> </Text>
-                  </View>
-                  <Text>{'  '}Available</Text>
-                </View>
-                <View style={booking.row}>
-                  <View style={booking.seat_c}>
-                    <Text> </Text>
-                  </View>
-                  <Text>{'  '}Sold</Text>
-                </View>
-              </View>
-              <View style={booking.flex3}>
-                <View style={booking.row}>
-                  <Image
-                    source={{
-                      uri: 'https://cdn-icons-png.flaticon.com/512/545/545682.png',
-                    }}
-                    style={booking.icon}
-                  />
-                  <Text>{'   '}1 to 14</Text>
-                </View>
-                <View style={booking.row}>
-                  <View style={booking.seat_b}>
-                    <Text> </Text>
-                  </View>
-                  <Text>{'  '}Selected</Text>
-                </View>
-              </View>
-            </View>
-            <Text style={booking.textleft}>max seat booking is 5</Text>
+    <View>
+      <ScrollView
+        style={booking.container}
+        showsVerticalScrollIndicator={false}>
+        <View style={booking.bottom}>
+          <View style={booking.head}>
+            <Text style={booking.head_name}>Chose your seat</Text>
           </View>
-        </View>
-        <View style={booking.head}>
-          <Text style={booking.head_name}>Order Info</Text>
-        </View>
-        <View style={booking.flex}>
-          <View style={booking.card}>
-            <View style={booking.card_head}>
-              <Image
-                source={require('../../assets/cineone.png')}
-                style={booking.card_premiere}
+          <View style={booking.flex}>
+            <View style={booking.card}>
+              <View style={booking.card_head}>
+                <View style={booking.screen}>
+                  <View style={booking.seat}>
+                    {seatLeft.map(row => (
+                      <View>
+                        {seatRow.map(item => (
+                          <TouchableOpacity
+                            style={
+                              selectedSeat.includes(item.row + row.number)
+                                ? booking.seat_b
+                                : reservedSeat.includes(item.row + row.number)
+                                ? booking.seat_c
+                                : booking.seat_a
+                            }
+                            onPress={() =>
+                              handlePressSeat(item.row + row.number)
+                            }>
+                            <Text> </Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    ))}
+                  </View>
+                  <View style={booking.seat}>
+                    {seatRight.map(row => (
+                      <View>
+                        {seatRow.map(item => (
+                          <TouchableOpacity
+                            style={
+                              selectedSeat.includes(item.row + row.number)
+                                ? booking.seat_b
+                                : reservedSeat.includes(item.row + row.number)
+                                ? booking.seat_c
+                                : booking.seat_a
+                            }
+                            onPress={() =>
+                              handlePressSeat(item.row + row.number)
+                            }>
+                            <Text> </Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              </View>
+              <View>
+                <Text style={booking.head_name}>Seating key</Text>
+              </View>
+              <View style={booking.row}>
+                <View style={booking.flex2}>
+                  <View style={booking.row}>
+                    <Image
+                      source={{
+                        uri: 'https://cdn-icons-png.flaticon.com/512/545/545678.png',
+                      }}
+                      style={booking.icon}
+                    />
+                    <Text>{'  '}A to G</Text>
+                  </View>
+                  <View style={booking.row}>
+                    <View style={booking.seat_a}>
+                      <Text> </Text>
+                    </View>
+                    <Text>{'  '}Available</Text>
+                  </View>
+                  <View style={booking.row}>
+                    <View style={booking.seat_c}>
+                      <Text> </Text>
+                    </View>
+                    <Text>{'  '}Sold</Text>
+                  </View>
+                </View>
+                <View style={booking.flex3}>
+                  <View style={booking.row}>
+                    <Image
+                      source={{
+                        uri: 'https://cdn-icons-png.flaticon.com/512/545/545682.png',
+                      }}
+                      style={booking.icon}
+                    />
+                    <Text>{'   '}1 to 14</Text>
+                  </View>
+                  <View style={booking.row}>
+                    <View style={booking.seat_b}>
+                      <Text> </Text>
+                    </View>
+                    <Text>{'  '}Selected</Text>
+                  </View>
+                </View>
+              </View>
+              <Text style={booking.textleft}>max seat booking is 5</Text>
+            </View>
+          </View>
+          <View style={booking.head}>
+            <Text style={booking.head_name}>Order Info</Text>
+          </View>
+          <View style={booking.flex}>
+            <View style={booking.card}>
+              <View style={booking.card_head}>
+                <Image
+                  source={require('../../assets/cineone.png')}
+                  style={booking.card_premiere}
+                />
+                <View>
+                  <Text style={booking.text1}> CineOne 21 Cinema </Text>
+                </View>
+                <View>
+                  <Text style={booking.text2}> Dora the lost city </Text>
+                </View>
+              </View>
+              <View style={booking.row}>
+                <View style={booking.flex3}>
+                  <Text style={booking.textleft}>Tuesday, 07 july 2022</Text>
+                </View>
+                <View style={booking.flex2}>
+                  <Text style={booking.textright}>19.00</Text>
+                </View>
+              </View>
+              <View style={booking.row}>
+                <View style={booking.flex3}>
+                  <Text style={booking.textleft}>One ticket price</Text>
+                </View>
+                <View style={booking.flex2}>
+                  <Text style={booking.textright}>Rp. {price}</Text>
+                </View>
+              </View>
+              <View style={booking.row}>
+                <View style={booking.flex3}>
+                  <Text style={booking.textleft}>Seat choosed</Text>
+                </View>
+                <View style={booking.flex2}>
+                  <Text style={booking.textright}>
+                    {selectedSeat.length === 0 ? '-' : selectedSeat.join(', ')}
+                  </Text>
+                </View>
+              </View>
+              <View style={booking.hr} />
+              <View style={booking.row}>
+                <View style={booking.flex3}>
+                  <Text style={booking.textleft2}>Total Payment</Text>
+                </View>
+                <View style={booking.flex2}>
+                  <Text style={booking.textright2}>
+                    Rp. {selectedSeat.length * price}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View style={booking.btn}>
+            <View style={booking.button}>
+              <Button
+                title="Checkout now"
+                color={'#5F2EEA'}
+                onPress={handlePayment}
               />
-              <View>
-                <Text style={booking.text1}> CineOne 21 Cinema </Text>
-              </View>
-              <View>
-                <Text style={booking.text2}> Dora the lost city </Text>
-              </View>
-            </View>
-            <View style={booking.row}>
-              <View style={booking.flex3}>
-                <Text style={booking.textleft}>Tuesday, 07 july 2022</Text>
-              </View>
-              <View style={booking.flex2}>
-                <Text style={booking.textright}>19.00</Text>
-              </View>
-            </View>
-            <View style={booking.row}>
-              <View style={booking.flex3}>
-                <Text style={booking.textleft}>One ticket price</Text>
-              </View>
-              <View style={booking.flex2}>
-                <Text style={booking.textright}>Rp. {price}</Text>
-              </View>
-            </View>
-            <View style={booking.row}>
-              <View style={booking.flex3}>
-                <Text style={booking.textleft}>Seat choosed</Text>
-              </View>
-              <View style={booking.flex2}>
-                <Text style={booking.textright}>
-                  {selectedSeat.length === 0 ? '-' : selectedSeat.join(', ')}
-                </Text>
-              </View>
-            </View>
-            <View style={booking.hr} />
-            <View style={booking.row}>
-              <View style={booking.flex3}>
-                <Text style={booking.textleft2}>Total Payment</Text>
-              </View>
-              <View style={booking.flex2}>
-                <Text style={booking.textright2}>
-                  Rp. {selectedSeat.length * price}
-                </Text>
-              </View>
             </View>
           </View>
         </View>
-        <View style={booking.btn}>
-          <View style={booking.button}>
-            <Button
-              title="Checkout now"
-              color={'#5F2EEA'}
-              onPress={handlePayment}
-            />
-          </View>
-        </View>
-
-        <View style={booking.hr} />
-      </View>
-      <View style={booking.hr} />
-      {/* <View style={booking.hr} />
-      <View style={booking.hr} /> */}
-    </ScrollView>
+        <Footer />
+      </ScrollView>
+    </View>
   );
 }
 
 const booking = StyleSheet.create({
   container: {
-    paddingBottom: 50,
     backgroundColor: 'white',
+    marginBottom: -60,
   },
   bottom: {
     padding: 30,
     backgroundColor: '#F5F6F8',
-    marginTop: 50,
   },
   head: {
     alignItems: 'flex-start',

@@ -1,12 +1,12 @@
 import React, {useEffect} from 'react';
 import {View, Text, Image, StyleSheet, ImageBackground} from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const image = require('../../assets/ss.jpg');
 
 function SpleshSreen(props) {
   useEffect(() => {
-    const token = false;
-    setTimeout(() => {
+    setTimeout(async () => {
+      const token = await AsyncStorage.getItem('token');
       if (token) {
         props.navigation.navigate('AppScreen');
       } else {

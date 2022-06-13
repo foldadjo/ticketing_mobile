@@ -9,6 +9,7 @@ const Drawer = createDrawerNavigator();
 
 import Home from '../screen/Home';
 import ViewAll from '../screen/ViewAll';
+import Profile from '../screen/Profile';
 import Detail from '../screen/Detail';
 import Booking from '../screen/Booking';
 import Payment from '../screen/Payment';
@@ -32,6 +33,17 @@ function ViewallNavigator() {
       <Stack.Screen
         component={ViewAll}
         name="ViewAll"
+        options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
+}
+function ProfileNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        component={Profile}
+        name="Profile"
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -91,10 +103,22 @@ function AppNavigator() {
         name="ViewAll"
         options={{
           drawerPosition: 'right',
-          title: 'View All',
+          title: 'List Movie',
           header: props => <Header {...props} />,
           drawerIcon: ({size, color}) => (
-            <Icon name="home" size={size} color={color} />
+            <Icon name="book" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        component={ProfileNavigator}
+        name="Profile"
+        options={{
+          drawerPosition: 'right',
+          title: 'Profile',
+          header: props => <Header {...props} />,
+          drawerIcon: ({size, color}) => (
+            <Icon name="user" size={size} color={color} />
           ),
         }}
       />
