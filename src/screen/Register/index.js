@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import axios from '../../utils/axios';
 import {
   View,
   Text,
@@ -39,10 +40,15 @@ function Register(props) {
 
   const handleRegister = async e => {
     try {
-      e.preventDefault();
       console.log(form);
+      const result = await axios.post('/auth/register', form);
+      console.log(result);
+      // eslint-disable-next-line no-alert
+      alert(result.data.msg);
       props.navigation.navigate('Login');
     } catch (error) {
+      // eslint-disable-next-line no-alert
+      alert(error.response.data.msg);
       console.log(error.response);
     }
   };

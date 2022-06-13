@@ -30,13 +30,17 @@ function Login(props) {
   const handleLogin = async e => {
     try {
       console.log(form);
-      const result = await axios.post('auth/login', form);
+      const result = await axios.post('/auth/login', form);
       console.log(result);
       await AsyncStorage.setItem('token', result.data.data.token);
       await AsyncStorage.setItem('refreshToken', result.data.data.refreshToken);
       await AsyncStorage.setItem('id', result.data.data.id);
+      // eslint-disable-next-line no-alert
+      alert(result.data.msg);
       props.navigation.navigate('AppScreen', {screen: 'home'});
     } catch (error) {
+      // eslint-disable-next-line no-alert
+      alert(error.response.data.msg);
       console.log(error.response);
     }
   };
