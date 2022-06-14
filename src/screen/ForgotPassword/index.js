@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import axios from '../../utils/axios';
 import {
   View,
   Text,
@@ -8,32 +9,37 @@ import {
   TextInput,
   Image,
 } from 'react-native';
-// import {useRouter} from 'next/router';
 
 function ForgotPassword(props) {
   // const router = useRouter();
+  const [otp, setOtp] = useState();
   const [password, setPassword] = useState('');
   const [cPass, setCPass] = useState('');
 
-  // const dispatch = useDispatch();
-  // const auth = useSelector(state => state.auth);
-
   const [form, setForm] = useState({
-    // keyChangePassword: router.query.otp,
+    keyChangePassword: '',
     newPassword: '',
     confirmPassword: '',
   });
 
   useEffect(() => {
-    setForm({newPassword: password, confirmPassword: cPass});
-  }, [cPass, password]);
+    setForm({
+      keyChangePassword: `${otp}`,
+      newPassword: password,
+      confirmPassword: cPass,
+    });
+  }, [cPass, otp, password]);
 
-  const handleLogin = async e => {
+  const handleReset = async e => {
     try {
-      e.preventDefault();
       console.log(form);
+      const result = await axios.patch('/auth/resetPassword', form);
+      // eslint-disable-next-line no-alert
+      alert(result.data.msg);
       props.navigation.navigate('Login');
     } catch (error) {
+      // eslint-disable-next-line no-alert
+      alert(error.response.data.msg);
       console.log(error.response);
     }
   };
@@ -56,6 +62,17 @@ function ForgotPassword(props) {
         <Text style={forgot.tag}>Set your new password</Text>
       </View>
       <View style={forgot.formulir}>
+        <View>
+          <Text style={forgot.name}> Code OTP </Text>
+          <TextInput
+            placeholder="Cek your email and copas code hire"
+            keyboardType="number-pad"
+            maxLength={6}
+            style={forgot.form}
+            onChangeText={newText => setOtp(newText)}
+            defaultValue={otp}
+          />
+        </View>
         <View>
           <Text style={forgot.name}> Password </Text>
           <TextInput
@@ -82,7 +99,7 @@ function ForgotPassword(props) {
         </View>
       </View>
       <View style={forgot.button}>
-        <Button title="Submit" color={'#5F2EEA'} onPress={handleLogin} />
+        <Button title="Submit" color={'#5F2EEA'} onPress={handleReset} />
       </View>
     </ScrollView>
   );

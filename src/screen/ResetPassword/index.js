@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import axios from '../../utils/axios';
 import {
   View,
   Text,
@@ -11,8 +12,6 @@ import {
 
 function ResetPassword(props) {
   const [mail, setMail] = useState('');
-  // const dispatch = useDispatch();
-  // const auth = useSelector(state => state.auth);
 
   const [form, setForm] = useState({
     email: '',
@@ -26,10 +25,14 @@ function ResetPassword(props) {
 
   const handlePassword = async e => {
     try {
-      e.preventDefault();
       console.log(form);
+      const result = await axios.post('/auth/forgotPassword', form);
+      // eslint-disable-next-line no-alert
+      alert(result.data.msg);
       props.navigation.navigate('ForgotPassword');
     } catch (error) {
+      // eslint-disable-next-line no-alert
+      alert(error.response.data.msg);
       console.log(error.response);
     }
   };
