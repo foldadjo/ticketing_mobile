@@ -138,7 +138,7 @@ function Home(props) {
       </View>
       <ScrollView horizontal={true} style={home.row}>
         {month.map(item => (
-          <TouchableOpacity style={home.month}>
+          <TouchableOpacity style={home.month} key={item.number}>
             <Text style={home.month_text}>{item.title}</Text>
           </TouchableOpacity>
         ))}

@@ -15,6 +15,7 @@ import Booking from '../screen/Booking';
 import Payment from '../screen/Payment';
 
 import DrawerContent from '../component/DrawerContent';
+import Ticket from '../screen/Ticket';
 
 function HomeNavigator() {
   return (
@@ -22,6 +23,26 @@ function HomeNavigator() {
       <Stack.Screen
         component={Home}
         name="Home"
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        component={Detail}
+        name="Detail"
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        component={Booking}
+        name="Booking"
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        component={Payment}
+        name="Payment"
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        component={Ticket}
+        name="Ticket"
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -49,49 +70,17 @@ function ProfileNavigator() {
     </Stack.Navigator>
   );
 }
-function DetailNavigator() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        component={Detail}
-        name="Detail"
-        options={{headerShown: false}}
-      />
-    </Stack.Navigator>
-  );
-}
-function BookingNavigator() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        component={Booking}
-        name="Booking"
-        options={{headerShown: false}}
-      />
-    </Stack.Navigator>
-  );
-}
-function PaymentNavigator() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        component={Payment}
-        name="Payment"
-        options={{headerShown: false}}
-      />
-    </Stack.Navigator>
-  );
-}
 
 function AppNavigator() {
   return (
     <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
       <Drawer.Screen
         component={HomeNavigator}
-        name="Home"
+        name="HomeNavigator"
         options={{
           drawerPosition: 'right',
           title: 'Home',
+          defaultStatus: 'closed',
           header: props => <Header {...props} />,
           drawerIcon: ({size, color}) => (
             <Icon name="home" size={size} color={color} />
@@ -100,10 +89,11 @@ function AppNavigator() {
       />
       <Drawer.Screen
         component={ViewallNavigator}
-        name="ViewAll"
+        name="ViewAllNavigator"
         options={{
           drawerPosition: 'right',
           title: 'List Movie',
+          defaultStatus: 'closed',
           header: props => <Header {...props} />,
           drawerIcon: ({size, color}) => (
             <Icon name="book" size={size} color={color} />
@@ -112,49 +102,14 @@ function AppNavigator() {
       />
       <Drawer.Screen
         component={ProfileNavigator}
-        name="Profile"
+        name="ProfileNavigator"
         options={{
           drawerPosition: 'right',
           title: 'Profile',
+          defaultStatus: 'closed',
           header: props => <Header {...props} />,
           drawerIcon: ({size, color}) => (
             <Icon name="user" size={size} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        component={DetailNavigator}
-        name="Detail"
-        options={{
-          drawerPosition: 'right',
-          title: 'Detail',
-          header: props => <Header {...props} />,
-          drawerIcon: ({size, color}) => (
-            <Icon name="home" size={size} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        component={BookingNavigator}
-        name="Booking"
-        options={{
-          drawerPosition: 'right',
-          title: 'Booking',
-          header: props => <Header {...props} />,
-          drawerIcon: ({size, color}) => (
-            <Icon name="home" size={size} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        component={PaymentNavigator}
-        name="Payment"
-        options={{
-          drawerPosition: 'right',
-          title: 'Payment',
-          header: props => <Header {...props} />,
-          drawerIcon: ({size, color}) => (
-            <Icon name="home" size={size} color={color} />
           ),
         }}
       />

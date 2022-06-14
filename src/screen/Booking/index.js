@@ -74,9 +74,10 @@ function Booking(props) {
                 <View style={booking.screen}>
                   <View style={booking.seat}>
                     {seatLeft.map(row => (
-                      <View>
+                      <View key={row.number}>
                         {seatRow.map(item => (
                           <TouchableOpacity
+                            key={item.row}
                             style={
                               selectedSeat.includes(item.row + row.number)
                                 ? booking.seat_b
@@ -95,9 +96,10 @@ function Booking(props) {
                   </View>
                   <View style={booking.seat}>
                     {seatRight.map(row => (
-                      <View>
+                      <View key={row.number}>
                         {seatRow.map(item => (
                           <TouchableOpacity
+                            key={item.row}
                             style={
                               selectedSeat.includes(item.row + row.number)
                                 ? booking.seat_b
@@ -161,7 +163,12 @@ function Booking(props) {
                   </View>
                 </View>
               </View>
-              <Text style={booking.textleft}>max seat booking is 5</Text>
+              <Text
+                style={
+                  selectedSeat.length === 5 ? booking.text2 : booking.textleft
+                }>
+                max seat booking is 5
+              </Text>
             </View>
           </View>
           <View style={booking.head}>
@@ -225,7 +232,12 @@ function Booking(props) {
               <Button
                 title="Checkout now"
                 color={'#5F2EEA'}
-                onPress={handlePayment}
+                onPress={
+                  selectedSeat.length === 0
+                    ? // eslint-disable-next-line no-alert
+                      () => alert('choise a seat first')
+                    : handlePayment
+                }
               />
             </View>
           </View>

@@ -1,34 +1,16 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-// import axios from '../../utils/axios';
 
 function Navbar(props) {
-  // const [name, setName] = useState('');
-  // const [image, setImage] = useState('');
-  // const [noTelp, setNoTelp] = useState("hanven't add a number");
-
-  // const getalldata = async e => {
-  //   try {
-  //     const id = await AsyncStorage.getItem('id');
-  //     console.log(id);
-  //     const data = await axios.get(`user/${id}`);
-  //     console.log(data);
-  //     await AsyncStorage.setItem('image', data.data.data.image);
-  //     await AsyncStorage.setItem('role', data.data.data.role);
-  //     setName(data.data.data.name);
-  //     setImage(data.data.data.image);
-  //     setNoTelp(data.data.data.noTelp);
-  //   } catch (error) {
-  //     console.log(error.response);
-  //   }
-  // };
+  const handleHome = () => {
+    props.navigation.navigate('Home');
+  };
   const openDrawer = () => {
     props.navigation.openDrawer();
   };
   return (
     <View style={navbar.container}>
-      <View style={navbar.row}>
+      <TouchableOpacity style={navbar.row} onPress={handleHome}>
         <View>
           <Text style={navbar.logo}>Ticketing</Text>
         </View>
@@ -38,7 +20,7 @@ function Navbar(props) {
             style={navbar.image}
           />
         </View>
-      </View>
+      </TouchableOpacity>
       <View style={navbar.burger}>
         <TouchableOpacity onPress={openDrawer}>
           <Image

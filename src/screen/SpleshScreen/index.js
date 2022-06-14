@@ -5,15 +5,19 @@ const image = require('../../assets/ss.jpg');
 
 function SpleshSreen(props) {
   useEffect(() => {
-    setTimeout(async () => {
-      const token = await AsyncStorage.getItem('token');
+    cekToken();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const cekToken = async () => {
+    const token = await AsyncStorage.getItem('token');
+    setTimeout(() => {
       if (token) {
-        props.navigation.navigate('AppScreen');
+        props.navigation.navigate('AppScreen', {screen: 'home'});
       } else {
         props.navigation.navigate('AuthScreen');
       }
     }, 3000);
-  }, [props.navigation]);
+  };
   return (
     <View style={ss.container}>
       <ImageBackground source={image} resizeMode="cover" style={ss.bg}>

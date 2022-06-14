@@ -17,6 +17,11 @@ function Booking(props) {
   const [noTelp, setNoTelp] = useState('');
   const [mail, setMail] = useState('');
 
+  const handlePay = () => {
+    props.navigation.navigate('Profile');
+    // eslint-disable-next-line no-alert
+    alert('cek Order History in profile screen');
+  };
   return (
     <View>
       <ScrollView
@@ -117,7 +122,7 @@ function Booking(props) {
               <Button
                 title="Pay your order"
                 color={'#5F2EEA'}
-                //   onPress={handleSchedule}
+                onPress={handlePay}
               />
             </View>
           </View>

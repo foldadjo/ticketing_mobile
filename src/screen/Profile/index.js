@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, {useState, useEffect} from 'react';
 import Footer from '../../component/footer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import axios from '../../utils/axios';
 import {
   View,
@@ -26,6 +27,19 @@ function Profile(props) {
   };
   const handleProfile = () => {
     setMenu(true);
+  };
+  const handleLogout = async () => {
+    try {
+      // eslint-disable-next-line no-alert
+      alert('Logout');
+      await AsyncStorage.clear();
+      props.navigation.navigate('AuthScreen', {
+        screen: 'Login',
+      });
+    } catch (error) {}
+  };
+  const handleTicket = () => {
+    props.navigation.navigate('Ticket');
   };
   return (
     <View>
@@ -65,7 +79,7 @@ function Profile(props) {
                     <Button
                       title="Logout"
                       color={'#5F2EEA'}
-                      //   onPress={handleSchedule}
+                      onPress={handleLogout}
                     />
                   </View>
                 </View>
@@ -191,7 +205,7 @@ function Profile(props) {
                   <Button
                     title="Update Change"
                     color={'green'}
-                    //   onPress={handleSchedule}
+                    onPress={handleTicket}
                   />
                 </View>
               </View>
@@ -217,7 +231,7 @@ function Profile(props) {
                   <Button
                     title="Update Change"
                     color={'grey'}
-                    //   onPress={handleSchedule}
+                    onPress={handleTicket}
                   />
                 </View>
               </View>

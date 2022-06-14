@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import Footer from '../../component/footer';
 // import axios from '../../utils/axios';
 import SelectDropdown from 'react-native-select-dropdown';
+import Icon from 'react-native-vector-icons/Feather';
 import {
   View,
   Text,
@@ -17,7 +18,7 @@ function ViewAll(props) {
   const [search, setSearch] = useState('');
   // const [data, setData] = useState([]);
   // const [page, setPage] = useState(1);
-  const countries = ['Sort', 'A to Z', 'Z to A'];
+  const sort = ['Sort', 'A to Z', 'Z to A'];
 
   const month = [
     {number: 1, title: 'Januari'},
@@ -47,7 +48,7 @@ function ViewAll(props) {
       <View style={view.row}>
         {/* <View style={view.sorting}> */}
         <SelectDropdown
-          data={countries}
+          data={sort}
           onSelect={(selectedItem, index) => {
             console.log(selectedItem, index);
           }}
@@ -74,7 +75,7 @@ function ViewAll(props) {
       </View>
       <ScrollView horizontal={true} style={view.row}>
         {month.map(item => (
-          <TouchableOpacity style={view.month}>
+          <TouchableOpacity style={view.month} key={item.number}>
             <Text style={view.month_text}>{item.title}</Text>
           </TouchableOpacity>
         ))}

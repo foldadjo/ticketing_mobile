@@ -4,10 +4,10 @@ import Icon from 'react-native-vector-icons/Feather';
 
 function Footer(props) {
   const handleHome = () => {
-    props.navigation.navigate('AppScreen', {screen: 'Home'});
+    props.navigation.navigate('Home');
   };
   const handleViewAll = () => {
-    props.navigation.navigate('AppScreen', {screen: 'ViewAll'});
+    props.navigation.navigate('ViewAll');
   };
   return (
     <View style={footer.container}>
