@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import React, {useEffect, useState} from 'react';
 import axios from '../../utils/axios';
 import {
@@ -9,6 +10,7 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 
 function Register(props) {
@@ -17,6 +19,7 @@ function Register(props) {
   const [noTelp, setNoTelp] = useState('');
   const [mail, setMail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   // const dispatch = useDispatch();
   // const auth = useSelector(state => state.auth);
 
@@ -41,13 +44,22 @@ function Register(props) {
   const handleRegister = async e => {
     try {
       console.log(form);
-      const result = await axios.post('/auth/register', form);
-      console.log(result);
-      // eslint-disable-next-line no-alert
-      alert(result.data.msg);
-      props.navigation.navigate('Login');
+      setLoading(true);
+      if (form.firstName === '') {
+        alert('firsname is required');
+      } else if (form.email === '') {
+        alert('email is required');
+      } else if (form.password === '') {
+        alert('password is required');
+      } else {
+        const result = await axios.post('/auth/register', form);
+        console.log(result);
+        alert(result.data.msg);
+        props.navigation.navigate('Login');
+      }
+      setLoading(false);
     } catch (error) {
-      // eslint-disable-next-line no-alert
+      setLoading(false);
       alert(error.response.data.msg);
       console.log(error.response);
     }
@@ -129,7 +141,11 @@ function Register(props) {
         </View>
       </View>
       <View style={regis.button}>
-        <Button title="Sign Up" color={'#5F2EEA'} onPress={handleRegister} />
+        {loading === true ? (
+          <ActivityIndicator size="large" color="white" />
+        ) : (
+          <Button title="Sign Up" color={'#5F2EEA'} onPress={handleRegister} />
+        )}
       </View>
       <View style={regis.login}>
         <Text>Already have an account?</Text>

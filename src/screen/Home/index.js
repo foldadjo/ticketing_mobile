@@ -11,11 +11,17 @@ import {
   ScrollView,
   TextInput,
   Image,
+  RefreshControl,
 } from 'react-native';
+
+const wait = timeout => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
 
 function Home(props) {
   const [mail, setMail] = useState('');
   const [monthfil, setMonthfil] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
   // const [data, setData] = useState([]);
   // const [page, setPage] = useState(1);
   // const limit = 10;
@@ -37,12 +43,15 @@ function Home(props) {
   //   getdataMovie();
   // }, [getdataMovie, page]);
 
-  const handleStatus = () => {
-    if (status === 'active') {
-      setStatus('notActive');
-    } else {
-      setStatus('active');
-    }
+  const onRefresh = React.useCallback(() => {
+    setMonthfil('');
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+
+  const handleMonth = e => {
+    setMonthfil(`${e}`);
+    console.log(monthfil);
   };
 
   const handlemail = async e => {
@@ -56,13 +65,22 @@ function Home(props) {
     }
   };
   const handleViewAll = () => {
-    props.navigation.navigate('ViewAll');
+    props.navigation.navigate('ViewAllNavigator');
   };
   const handleDetail = () => {
     props.navigation.navigate('Detail');
   };
   return (
-    <ScrollView style={home.container} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={home.container}
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={['#5F2EEA', '#D6D8E7']}
+        />
+      }>
       <View style={home.margin}>
         <Text style={home.tag}>
           Nearest Cinema, Newest Movie, Find out now!
@@ -93,7 +111,7 @@ function Home(props) {
             />
             <Text style={home.movie_title}>Dora the lost city</Text>
             <Text style={home.movie_category}>Adventure</Text>
-            <View style={(home.button, {width: 100})}>
+            <View style={home.button}>
               <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
             </View>
           </View>
@@ -106,7 +124,7 @@ function Home(props) {
             />
             <Text style={home.movie_title}>Dora the lost city</Text>
             <Text style={home.movie_category}>Adventure</Text>
-            <View style={(home.button, {width: 100})}>
+            <View style={home.button}>
               <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
             </View>
           </View>
@@ -119,7 +137,7 @@ function Home(props) {
             />
             <Text style={home.movie_title}>Dora the lost city</Text>
             <Text style={home.movie_category}>Adventure</Text>
-            <View style={(home.button, {width: 100})}>
+            <View style={home.button}>
               <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
             </View>
           </View>
@@ -137,8 +155,22 @@ function Home(props) {
       </View>
       <ScrollView horizontal={true} style={home.row}>
         {month.map(item => (
-          <TouchableOpacity style={home.month} key={item.number}>
-            <Text style={home.month_text}>{item.title}</Text>
+          <TouchableOpacity
+            style={monthfil === `${item.number}` ? home.month2 : home.month}
+            key={item.number}
+            onPress={
+              monthfil === `${item.number}`
+                ? () => handleMonth('')
+                : () => handleMonth(item.number)
+            }>
+            <Text
+              style={
+                monthfil === `${item.number}`
+                  ? home.month_text2
+                  : home.month_text
+              }>
+              {item.title}
+            </Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -152,7 +184,7 @@ function Home(props) {
           />
           <Text style={home.movie_title}>Dora the lost city</Text>
           <Text style={home.movie_category}>Adventure</Text>
-          <View style={(home.button, {width: 100})}>
+          <View style={home.button}>
             <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
           </View>
         </View>
@@ -165,7 +197,7 @@ function Home(props) {
           />
           <Text style={home.movie_title}>Dora the lost city</Text>
           <Text style={home.movie_category}>Adventure</Text>
-          <View style={(home.button, {width: 100})}>
+          <View style={home.button}>
             <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
           </View>
         </View>
@@ -178,7 +210,7 @@ function Home(props) {
           />
           <Text style={home.movie_title}>Dora the lost city</Text>
           <Text style={home.movie_category}>Adventure</Text>
-          <View style={(home.button, {width: 100})}>
+          <View style={home.button}>
             <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
           </View>
         </View>
@@ -197,7 +229,7 @@ function Home(props) {
               defaultValue={mail}
             />
           </View>
-          <View style={home.button}>
+          <View style={home.button2}>
             <Button title="Join Now" color={'#5F2EEA'} onPress={handlemail} />
           </View>
           <Text style={(home.tag, {lineHeight: 20, textAlign: 'center'})}>
@@ -250,7 +282,7 @@ const home = StyleSheet.create({
   viewAll: {flex: 1, alignItems: 'flex-end', top: 10},
   viewAll_Text: {color: '#5F2EEA'},
   movie: {
-    width: 150,
+    width: 160,
     height: 300,
     backgroundColor: 'white',
     borderRadius: 10,
@@ -277,11 +309,22 @@ const home = StyleSheet.create({
     borderRadius: 3,
     width: 82,
   },
+  month2: {
+    marginRight: 20,
+    backgroundColor: '#5F2EEA',
+    padding: 3,
+    alignItems: 'center',
+    borderRadius: 3,
+    width: 82,
+  },
   month_text: {
     color: '#5F2EEA',
     fontWeight: '500',
   },
-
+  month_text2: {
+    color: 'white',
+    fontWeight: '500',
+  },
   formulir: {marginTop: 20},
   form: {
     backgroundColor: '#FFFFFF',
@@ -300,19 +343,28 @@ const home = StyleSheet.create({
     marginTop: 10,
     marginBottom: 15,
     padding: 5,
+    width: 100,
+  },
+  button2: {
+    backgroundColor: '#5F2EEA',
+    color: 'white',
+    borderRadius: 10,
+    marginTop: 10,
+    marginBottom: 15,
+    padding: 5,
     width: 250,
   },
   card: {
     alignItems: 'center',
     backgroundColor: 'white',
-    paddingVertical: 50,
+    paddingTop: 50,
     borderRadius: 10,
     shadowOffset: 30,
     shadowOpacity: 10,
     shadowColor: '#FFFFFF',
-    marginBottom: 30,
+    marginBottom: 10,
   },
-  card_image: {width: 120, height: 180, borderRadius: 5},
+  card_image: {width: 110, height: 160, borderRadius: 5},
 });
 
 export default Home;

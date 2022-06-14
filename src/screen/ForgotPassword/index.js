@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import React, {useEffect, useState} from 'react';
 import axios from '../../utils/axios';
 import {
@@ -8,6 +9,7 @@ import {
   ScrollView,
   TextInput,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 
 function ForgotPassword(props) {
@@ -15,6 +17,7 @@ function ForgotPassword(props) {
   const [otp, setOtp] = useState();
   const [password, setPassword] = useState('');
   const [cPass, setCPass] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     keyChangePassword: '',
@@ -33,12 +36,13 @@ function ForgotPassword(props) {
   const handleReset = async e => {
     try {
       console.log(form);
+      setLoading(true);
       const result = await axios.patch('/auth/resetPassword', form);
-      // eslint-disable-next-line no-alert
+      setLoading(false);
       alert(result.data.msg);
       props.navigation.navigate('Login');
     } catch (error) {
-      // eslint-disable-next-line no-alert
+      setLoading(false);
       alert(error.response.data.msg);
       console.log(error.response);
     }
@@ -99,7 +103,11 @@ function ForgotPassword(props) {
         </View>
       </View>
       <View style={forgot.button}>
-        <Button title="Submit" color={'#5F2EEA'} onPress={handleReset} />
+        {loading === true ? (
+          <ActivityIndicator size="large" color="white" />
+        ) : (
+          <Button title="Submit" color={'#5F2EEA'} onPress={handleReset} />
+        )}
       </View>
     </ScrollView>
   );

@@ -1,11 +1,4 @@
 <h1 align='center'>Ticketing</h1>
-  <!-- <p align="center">
-    <a href="https://itjobs-project.vercel.app/">View Demo</a>
-    ·
-    <a href="https://github.com/thariqfarsha/itjobs-frontend/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/thariqfarsha/itjobs-frontend/pulls">Request Feature</a>
-  </p> -->
 
 <p align="center">
  <a href="https://ibb.co/P5W95yB"><img src="https://i.ibb.co/9q4Vq0R/Splash-Screen-2022-06-11-00-56-56-98-73.jpg" alt="2022-06-11-00-56-56-98-REC" border="0" width="800px"></a>
@@ -44,24 +37,21 @@ URL_CLOUDINARY: "https://res.cloudinary.com/foldadjo",
 ## Acknowledgements
 
 - [axios](https://www.npmjs.com/package/axios)
-- [bootstrap](https://www.npmjs.com/package/bootstrap)
-- [next](https://www.npmjs.com/package/next)
-- [node-sass](https://www.npmjs.com/package/node-sass)
-- [qs](https://www.npmjs.com/package/qs)
 - [react](https://www.npmjs.com/package/react)
-- [react-bootstrap](https://www.npmjs.com/package/react-bootstrap)
-- [react-dom](https://www.npmjs.com/package/react-dom)
-- [react-icons](https://www.npmjs.com/package/react-icons)
+- [react-native](https://www.npmjs.com/package/react-native)
 - [react-redux](https://www.npmjs.com/package/react-redux)
 - [redux](https://www.npmjs.com/package/redux)
 - [redux-logger](https://www.npmjs.com/package/redux-logger)
 - [redux-promise-middleware](https://www.npmjs.com/package/redux-promise-middleware)
 - [redux-thunk](https://www.npmjs.com/package/redux-thunk)
 - [eslint](https://www.npmjs.com/package/eslint)
-- [sass](https://www.npmjs.com/package/sass)
-- [js-cookie](https://www.npmjs.com/package/js-cookie)
-- [cookies](https://www.npmjs.com/package/cookies)
-- [react-paginate](https://www.npmjs.com/package/react-paginate)
+- [ActivityIndicator](https://reactnative.dev/docs/activityindicator)
+- [React Native Barcode Creator](https://openbase.com/js/react-native-barcode-creator)
+- [RefreshControl](https://reactnative.dev/docs/refreshcontrol)
+- [datepicker](https://github.com/henninghall/react-native-date-picker)
+- [SelectDropdown](https://github.com/AdelRedaa97/react-native-select-dropdown)
+- [Icon](https://github.com/oblador/react-native-vector-icons)
+- [List-Icon/feather](https://feathericons.com)
 
 ## License
 
@@ -87,10 +77,7 @@ https://github.com/foldadjo/Ticketing_BE.git
 
 - [axios](https://www.npmjs.com/package/axios)
 - [react](https://www.npmjs.com/package/react)
-- [react-bootstrap](https://www.npmjs.com/package/react-bootstrap)
-- [react-dom](https://www.npmjs.com/package/react-dom)
-- [react-icons](https://www.npmjs.com/package/react-icons)
-- [react-number-format](https://www.npmjs.com/package/react-number-format)
+- [react-native](https://www.npmjs.com/package/react-native)
 - [react-redux](https://www.npmjs.com/package/react-redux)
 - [redux](https://www.npmjs.com/package/redux)
 - [redux-logger](https://www.npmjs.com/package/redux-logger)

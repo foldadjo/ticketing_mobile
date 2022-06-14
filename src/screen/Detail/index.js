@@ -3,6 +3,7 @@ import Footer from '../../component/footer';
 // import axios from '../../utils/axios';
 import SelectDropdown from 'react-native-select-dropdown';
 import DatePicker from 'react-native-date-picker';
+import Icon from 'react-native-vector-icons/Feather';
 import {
   View,
   Text,
@@ -105,9 +106,14 @@ function Detail(props) {
           <Text style={detail.head_name}>Show Time and Ticket</Text>
         </View>
         <TouchableOpacity style={detail.date} onPress={() => setOpen(true)}>
-          <Text style={detail.text}>
-            {button === true ? `${date.toDateString()}` : 'Set a date'}
-          </Text>
+          <View style={detail.flex5}>
+            <Text style={detail.text}>
+              {button === true ? `${date.toDateString()}` : 'Set a date'}
+            </Text>
+          </View>
+          <View style={detail.flex2}>
+            <Icon name="calendar" size={20} color={'black'} />
+          </View>
         </TouchableOpacity>
         <DatePicker
           modal
@@ -137,7 +143,9 @@ function Detail(props) {
           }}
           buttonStyle={detail.filtering}
           defaultButtonText="Set a Location"
-          // searchPlaceHolderColor="red"
+          renderDropdownIcon={() => (
+            <Icon name="chevron-down" size={20} color={'black'} />
+          )}
         />
         <View style={detail.card}>
           <View style={detail.card_head}>
@@ -284,6 +292,8 @@ const detail = StyleSheet.create({
     flexWrap: 'wrap',
   },
   flex: {flex: 1},
+  flex5: {flex: 11, alignItems: 'center'},
+  flex2: {flex: 1, alignItems: 'flex-end'},
   hr: {
     borderBottomColor: '#D6D8E7',
     borderBottomWidth: 1,
@@ -319,6 +329,7 @@ const detail = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
     alignItems: 'center',
+    flexDirection: 'row',
   },
   filtering: {
     backgroundColor: '#EFF0F6',

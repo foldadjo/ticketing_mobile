@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import React, {useEffect, useState} from 'react';
 import axios from '../../utils/axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,11 +11,13 @@ import {
   ScrollView,
   TextInput,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 
 function Login(props) {
   const [mail, setMail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   // const dispatch = useDispatch();
   // const auth = useSelector(state => state.auth);
 
@@ -30,16 +33,26 @@ function Login(props) {
   const handleLogin = async e => {
     try {
       console.log(form);
-      const result = await axios.post('/auth/login', form);
-      console.log(result);
-      await AsyncStorage.setItem('token', result.data.data.token);
-      await AsyncStorage.setItem('refreshToken', result.data.data.refreshToken);
-      await AsyncStorage.setItem('id', result.data.data.id);
-      // eslint-disable-next-line no-alert
-      alert(result.data.msg);
-      props.navigation.navigate('AppScreen', {screen: 'home'});
+      setLoading(true);
+      if (mail === '') {
+        alert('email is required');
+      } else if (password === '') {
+        alert('password is required');
+      } else {
+        const result = await axios.post('/auth/login', form);
+        console.log(result);
+        await AsyncStorage.setItem('token', result.data.data.token);
+        await AsyncStorage.setItem(
+          'refreshToken',
+          result.data.data.refreshToken,
+        );
+        await AsyncStorage.setItem('id', result.data.data.id);
+        alert(result.data.msg);
+        props.navigation.navigate('AppScreen', {screen: 'home'});
+      }
+      setLoading(false);
     } catch (error) {
-      // eslint-disable-next-line no-alert
+      setLoading(false);
       alert(error.response.data.msg);
       console.log(error.response);
     }
@@ -104,7 +117,11 @@ function Login(props) {
         </View>
       </View>
       <View style={login.button}>
-        <Button title="Login" color={'#5F2EEA'} onPress={handleLogin} />
+        {loading === true ? (
+          <ActivityIndicator size="large" color="white" />
+        ) : (
+          <Button title="Login" color={'#5F2EEA'} onPress={handleLogin} />
+        )}
       </View>
       <View style={login.login}>
         <Text>Forgot your password? </Text>

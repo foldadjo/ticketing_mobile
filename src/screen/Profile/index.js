@@ -12,7 +12,12 @@ import {
   ScrollView,
   TextInput,
   Image,
+  RefreshControl,
 } from 'react-native';
+
+const wait = timeout => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
 
 function Profile(props) {
   const [lastName, setLastName] = useState('');
@@ -21,6 +26,12 @@ function Profile(props) {
   const [pass, setPass] = useState('');
   const [newPass, setNewPass] = useState('');
   const [menu, setMenu] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
 
   const handleOrder = () => {
     setMenu(false);
@@ -57,7 +68,14 @@ function Profile(props) {
       </View>
       <ScrollView
         style={profile.container}
-        showsVerticalScrollIndicator={false}>
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['#5F2EEA', '#D6D8E7']}
+          />
+        }>
         <View style={menu === true ? profile.bottom : profile.dn}>
           <View style={profile.flex}>
             <View style={profile.carduser}>

@@ -81,6 +81,7 @@ function AppNavigator() {
           drawerPosition: 'right',
           title: 'Home',
           defaultStatus: 'closed',
+          drawerActiveTintColor: '#5F2EEA',
           header: props => <Header {...props} />,
           drawerIcon: ({size, color}) => (
             <Icon name="home" size={size} color={color} />
@@ -94,6 +95,7 @@ function AppNavigator() {
           drawerPosition: 'right',
           title: 'List Movie',
           defaultStatus: 'closed',
+          drawerActiveTintColor: '#5F2EEA',
           header: props => <Header {...props} />,
           drawerIcon: ({size, color}) => (
             <Icon name="book" size={size} color={color} />
@@ -107,6 +109,7 @@ function AppNavigator() {
           drawerPosition: 'right',
           title: 'Profile',
           defaultStatus: 'closed',
+          drawerActiveTintColor: '#5F2EEA',
           header: props => <Header {...props} />,
           drawerIcon: ({size, color}) => (
             <Icon name="user" size={size} color={color} />

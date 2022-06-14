@@ -12,13 +12,25 @@ import {
   ScrollView,
   TextInput,
   Image,
+  RefreshControl,
 } from 'react-native';
+
+const wait = timeout => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
 
 function ViewAll(props) {
   const [search, setSearch] = useState('');
+  const [sorting, setSorting] = useState('sort');
+  const [refreshing, setRefreshing] = useState(false);
   // const [data, setData] = useState([]);
   // const [page, setPage] = useState(1);
-  const sort = ['Sort', 'A to Z', 'Z to A'];
+  const sort = ['ID movie', 'A to Z', 'Z to A'];
+  const [monthfil, setMonthfil] = useState('');
+
+  console.log(sorting);
+  console.log(search);
+  console.log(monthfil);
 
   const month = [
     {number: 1, title: 'Januari'},
@@ -35,34 +47,55 @@ function ViewAll(props) {
     {number: 12, title: 'Desember'},
   ];
 
+  const onRefresh = React.useCallback(() => {
+    setSorting('sort');
+    setSearch('');
+    setMonthfil('');
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+
   const handleDetail = () => {
     props.navigation.navigate('Detail');
   };
+  const handleMonth = e => {
+    setMonthfil(`${e}`);
+  };
   return (
-    <ScrollView style={view.container} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={view.container}
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={['#5F2EEA', '#D6D8E7']}
+        />
+      }>
       <View style={view.row}>
         <View style={view.now}>
           <Text style={view.now_text}>List Movie</Text>
         </View>
       </View>
       <View style={view.row}>
-        {/* <View style={view.sorting}> */}
         <SelectDropdown
           data={sort}
           onSelect={(selectedItem, index) => {
-            console.log(selectedItem, index);
+            setSorting(selectedItem);
           }}
-          buttonTextAfterSelection={(selectedItem, index) => {
-            return selectedItem;
+          buttonTextAfterSelection={() => {
+            return sorting;
           }}
           rowTextForSelection={(item, index) => {
             return item;
           }}
           buttonStyle={view.sorting}
-          defaultButtonText="Sort"
-          // searchPlaceHolderColor="red"
+          buttonTextStyle={view.sort_text}
+          defaultButtonText={'sort'}
+          renderDropdownIcon={() => (
+            <Icon name="chevron-down" size={20} color={'#5F2EEA'} />
+          )}
         />
-        {/* </View> */}
         <View style={view.filtering}>
           <TextInput
             placeholder="Search movie name"
@@ -75,8 +108,22 @@ function ViewAll(props) {
       </View>
       <ScrollView horizontal={true} style={view.row}>
         {month.map(item => (
-          <TouchableOpacity style={view.month} key={item.number}>
-            <Text style={view.month_text}>{item.title}</Text>
+          <TouchableOpacity
+            style={monthfil === `${item.number}` ? view.month2 : view.month}
+            key={item.number}
+            onPress={
+              monthfil === `${item.number}`
+                ? () => handleMonth('')
+                : () => handleMonth(item.number)
+            }>
+            <Text
+              style={
+                monthfil === `${item.number}`
+                  ? view.month_text2
+                  : view.month_text
+              }>
+              {item.title}
+            </Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -161,12 +208,13 @@ const view = StyleSheet.create({
     flex: 1,
     borderColor: '#5F2EEA',
     borderWidth: 1,
-
     borderRadius: 10,
     backgroundColor: 'white',
+    paddingLeft: 15,
   },
+  sort_text: {color: 'black', paddingBottom: 5, fontSize: 15},
   filtering: {
-    flex: 3,
+    flex: 2,
     borderColor: '#5F2EEA',
     borderWidth: 1,
     borderRadius: 10,
@@ -202,8 +250,20 @@ const view = StyleSheet.create({
     borderRadius: 3,
     width: 82,
   },
+  month2: {
+    marginRight: 20,
+    backgroundColor: '#5F2EEA',
+    padding: 3,
+    alignItems: 'center',
+    borderRadius: 3,
+    width: 82,
+  },
   month_text: {
     color: '#5F2EEA',
+    fontWeight: '500',
+  },
+  month_text2: {
+    color: 'white',
     fontWeight: '500',
   },
   button: {
