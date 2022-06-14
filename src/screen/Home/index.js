@@ -15,6 +15,7 @@ import {
 
 function Home(props) {
   const [mail, setMail] = useState('');
+  const [monthfil, setMonthfil] = useState('');
   // const [data, setData] = useState([]);
   // const [page, setPage] = useState(1);
   // const limit = 10;
@@ -36,15 +37,13 @@ function Home(props) {
   //   getdataMovie();
   // }, [getdataMovie, page]);
 
-  // const getdataMovie = async e => {
-  //   try {
-  //     e.preventDefault();
-  //     const resultMovie = await axios.get(`movie?page=${page}&limit=${limit}`);
-  //     setData(resultMovie.data.data);
-  //   } catch (error) {
-  //     console.log(error.response);
-  //   }
-  // };
+  const handleStatus = () => {
+    if (status === 'active') {
+      setStatus('notActive');
+    } else {
+      setStatus('active');
+    }
+  };
 
   const handlemail = async e => {
     try {

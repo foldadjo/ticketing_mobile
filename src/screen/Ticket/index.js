@@ -28,71 +28,69 @@ function Ticket(props) {
   };
   return (
     <View>
-      <ScrollView
-        style={profile.container}
-        showsVerticalScrollIndicator={false}>
-        <View style={profile.bottom}>
-          <View style={profile.flex}>
-            <View style={profile.cardbarcode}>
-              <TouchableOpacity style={profile.flex} onPress={handleStatus}>
+      <ScrollView style={ticket.container} showsVerticalScrollIndicator={false}>
+        <View style={ticket.bottom}>
+          <View style={ticket.flex}>
+            <View style={ticket.cardbarcode}>
+              <TouchableOpacity style={ticket.flex} onPress={handleStatus}>
                 <BarcodeCreatorViewManager
                   value={'100'}
                   background={'#FFFFFF'}
                   foregroundColor={'#000000'}
                   format={BarcodeFormat.QR}
-                  style={profile.barcode}
+                  style={ticket.barcode}
                 />
               </TouchableOpacity>
             </View>
           </View>
-          <View style={profile.flex}>
-            <View style={status === 'active' ? profile.hr1 : profile.hr2}>
-              <View style={profile.hr} />
+          <View style={ticket.flex}>
+            <View style={status === 'active' ? ticket.hr1 : ticket.hr2}>
+              <View style={ticket.hr} />
             </View>
           </View>
-          <View style={profile.flex}>
-            <View style={status === 'active' ? profile.hr3 : profile.hr1}>
-              <View style={profile.hr} />
+          <View style={ticket.flex}>
+            <View style={status === 'active' ? ticket.hr3 : ticket.hr1}>
+              <View style={ticket.hr} />
             </View>
           </View>
-          <View style={profile.flex}>
-            <View style={profile.carddetail}>
-              <View style={profile.row}>
-                <View style={profile.left}>
-                  <Text style={profile.title}>Movie</Text>
-                  <Text style={profile.text}>Spiderman</Text>
+          <View style={ticket.flex}>
+            <View style={ticket.carddetail}>
+              <View style={ticket.row}>
+                <View style={ticket.left}>
+                  <Text style={ticket.title}>Movie</Text>
+                  <Text style={ticket.text}>Spiderman</Text>
                 </View>
-                <View style={profile.right}>
-                  <Text style={profile.title}>Category</Text>
-                  <Text style={profile.text}>Action</Text>
-                </View>
-              </View>
-              <View style={profile.row}>
-                <View style={profile.left}>
-                  <Text style={profile.title}>Date</Text>
-                  <Text style={profile.text}>07-06-2022</Text>
-                </View>
-                <View style={profile.right}>
-                  <Text style={profile.title}>Time</Text>
-                  <Text style={profile.text}>17.00</Text>
+                <View style={ticket.right}>
+                  <Text style={ticket.title}>Category</Text>
+                  <Text style={ticket.text}>Action</Text>
                 </View>
               </View>
-              <View style={profile.row}>
-                <View style={profile.left}>
-                  <Text style={profile.title}>Count</Text>
-                  <Text style={profile.text}>5 pcs</Text>
+              <View style={ticket.row}>
+                <View style={ticket.left}>
+                  <Text style={ticket.title}>Date</Text>
+                  <Text style={ticket.text}>07-06-2022</Text>
                 </View>
-                <View style={profile.right}>
-                  <Text style={profile.title}>Seat</Text>
-                  <Text style={profile.text}>C6, C7, C8, C7, C8</Text>
+                <View style={ticket.right}>
+                  <Text style={ticket.title}>Time</Text>
+                  <Text style={ticket.text}>17.00</Text>
                 </View>
               </View>
-              <View style={profile.row2}>
+              <View style={ticket.row}>
+                <View style={ticket.left}>
+                  <Text style={ticket.title}>Count</Text>
+                  <Text style={ticket.text}>5 pcs</Text>
+                </View>
+                <View style={ticket.right}>
+                  <Text style={ticket.title}>Seat</Text>
+                  <Text style={ticket.text}>C6, C7, C8, C7, C8</Text>
+                </View>
+              </View>
+              <View style={ticket.row2}>
                 <View>
-                  <Text style={profile.text2}>Total</Text>
+                  <Text style={ticket.text2}>Total</Text>
                 </View>
                 <View>
-                  <Text style={profile.text2}>Rp.250000</Text>
+                  <Text style={ticket.text2}>Rp.250000</Text>
                 </View>
               </View>
             </View>
@@ -104,7 +102,7 @@ function Ticket(props) {
   );
 }
 
-const profile = StyleSheet.create({
+const ticket = StyleSheet.create({
   container: {
     paddingBottom: 50,
     backgroundColor: '#F5F6F8',
