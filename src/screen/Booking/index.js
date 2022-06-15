@@ -55,7 +55,11 @@ function Booking(props) {
   ];
 
   const handlePressSeat = seat => {
-    if (selectedSeat.includes(seat) || selectedSeat.length > 4) {
+    if (
+      selectedSeat.includes(seat) ||
+      selectedSeat.length > 4 ||
+      reservedSeat.includes(seat)
+    ) {
       const deleteSeat = selectedSeat.filter(el => {
         return el !== seat;
       });

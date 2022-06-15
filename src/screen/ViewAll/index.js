@@ -29,17 +29,16 @@ function ViewAll(props) {
 
   const data = [
     {movieId: 1, name: 'Spiderman: no way home'},
-    {movieId: 2, name: 'Dr Strang'},
+    {movieId: 2, name: 'Dr Strange'},
     {movieId: 3, name: 'Dora the lost city'},
-    {movieId: 4, name: 'Dora the lost city'},
-    {movieId: 5, name: 'Dora the lost city'},
-    {movieId: 6, name: 'Dora the lost city'},
-    {movieId: 7, name: 'Spiderman: no way home'},
+    {movieId: 4, name: 'Spongebob'},
+    {movieId: 5, name: 'Ambulance'},
+    {movieId: 6, name: 'Avanger: End Game'},
+    {movieId: 7, name: 'Spiderman: far from home'},
     {movieId: 8, name: 'Dr Strang'},
-    {movieId: 9, name: 'Dora the lost city'},
-    {movieId: 10, name: 'Dora the lost city'},
-    {movieId: 11, name: 'Dora the lost city'},
-    {movieId: 12, name: 'Dora the lost city'},
+    {movieId: 9, name: 'The Car 2'},
+    {movieId: 10, name: 'One Piece film Red'},
+    {movieId: 11, name: 'Upin Ipin the movie'},
   ];
 
   console.log(sorting);
@@ -146,7 +145,7 @@ function ViewAll(props) {
         {data
           .filter((item, idx) => idx >= 4 * (page - 1) && idx < page * 4)
           .map(item => (
-            <View style={view.movie} key={item.id}>
+            <View style={view.movie} key={item.movieId}>
               <Image
                 source={{
                   uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',

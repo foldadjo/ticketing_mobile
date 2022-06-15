@@ -50,27 +50,35 @@ function Profile(props) {
 
   const handleChoosePhoto = async () => {
     await launchImageLibrary({noData: true}, response => {
-      setModalVisible(false);
-      // console.log(response);
-      if (response) {
-        if (response.assets[0].fileSize > 1000000) {
-          alert("image size can't be more than 1mb");
-        } else {
-          setPhoto(response);
+      try {
+        setModalVisible(false);
+        // console.log(response);
+        if (response) {
+          if (response.assets[0].fileSize > 1000000) {
+            alert("image size can't be more than 1mb");
+          } else {
+            setPhoto(response);
+          }
         }
+      } catch (error) {
+        console.log(error);
       }
     });
   };
 
   const handleTakePhoto = async e => {
     await launchCamera(e, response => {
-      setModalVisible(false);
-      if (response) {
-        if (response.assets[0].fileSize > 1000000) {
-          alert("image size can't be more than 1mb");
-        } else {
-          setPhoto(response);
+      try {
+        setModalVisible(false);
+        if (response) {
+          if (response.assets[0].fileSize > 1000000) {
+            alert("image size can't be more than 1mb");
+          } else {
+            setPhoto(response);
+          }
         }
+      } catch (error) {
+        console.log(error);
       }
     });
   };
