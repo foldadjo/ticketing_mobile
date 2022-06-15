@@ -22,7 +22,14 @@ function Home(props) {
   const [mail, setMail] = useState('');
   const [monthfil, setMonthfil] = useState('');
   const [refreshing, setRefreshing] = useState(false);
-  // const [data, setData] = useState([]);
+  const data = [
+    {movieId: 1, name: 'Spiderman: no way home'},
+    {movieId: 2, name: 'Dr Strang'},
+    {movieId: 3, name: 'Dora the lost city'},
+    {movieId: 4, name: 'Dora the lost city'},
+    {movieId: 5, name: 'Dora the lost city'},
+    {movieId: 6, name: 'Dora the lost city'},
+  ];
   // const [page, setPage] = useState(1);
   // const limit = 10;
   const month = [
@@ -102,45 +109,31 @@ function Home(props) {
           </View>
         </View>
         <ScrollView horizontal={true} style={home.row}>
-          <View style={home.movie}>
-            <Image
-              source={{
-                uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
-              }}
-              style={home.card_image}
-            />
-            <Text style={home.movie_title}>Dora the lost city</Text>
-            <Text style={home.movie_category}>Adventure</Text>
-            <View style={home.button}>
-              <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
+          {data.map(item => (
+            <View style={home.movie} key={item.movieId}>
+              <Image
+                source={{
+                  uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
+                }}
+                style={home.card_image}
+              />
+              <View style={home.movie_titleview}>
+                <Text style={home.movie_title}>
+                  {item.name.length > 18
+                    ? item.name.substring(0, 15) + '...'
+                    : item.name}
+                </Text>
+              </View>
+              <Text style={home.movie_category}>Adventure</Text>
+              <View style={home.button}>
+                <Button
+                  title="Detail"
+                  color={'#5F2EEA'}
+                  onPress={handleDetail}
+                />
+              </View>
             </View>
-          </View>
-          <View style={home.movie}>
-            <Image
-              source={{
-                uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
-              }}
-              style={home.card_image}
-            />
-            <Text style={home.movie_title}>Dora the lost city</Text>
-            <Text style={home.movie_category}>Adventure</Text>
-            <View style={home.button}>
-              <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
-            </View>
-          </View>
-          <View style={home.movie}>
-            <Image
-              source={{
-                uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
-              }}
-              style={home.card_image}
-            />
-            <Text style={home.movie_title}>Dora the lost city</Text>
-            <Text style={home.movie_category}>Adventure</Text>
-            <View style={home.button}>
-              <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
-            </View>
-          </View>
+          ))}
         </ScrollView>
       </View>
       <View style={home.row}>
@@ -175,45 +168,33 @@ function Home(props) {
         ))}
       </ScrollView>
       <ScrollView horizontal={true} style={home.row}>
-        <View style={home.movie}>
-          <Image
-            source={{
-              uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
-            }}
-            style={home.card_image}
-          />
-          <Text style={home.movie_title}>Dora the lost city</Text>
-          <Text style={home.movie_category}>Adventure</Text>
-          <View style={home.button}>
-            <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
-          </View>
-        </View>
-        <View style={home.movie}>
-          <Image
-            source={{
-              uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
-            }}
-            style={home.card_image}
-          />
-          <Text style={home.movie_title}>Dora the lost city</Text>
-          <Text style={home.movie_category}>Adventure</Text>
-          <View style={home.button}>
-            <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
-          </View>
-        </View>
-        <View style={home.movie}>
-          <Image
-            source={{
-              uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
-            }}
-            style={home.card_image}
-          />
-          <Text style={home.movie_title}>Dora the lost city</Text>
-          <Text style={home.movie_category}>Adventure</Text>
-          <View style={home.button}>
-            <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
-          </View>
-        </View>
+        {data
+          .filter((item, idx) => idx < 10)
+          .map(item => (
+            <View style={home.movie} key={item.movieId}>
+              <Image
+                source={{
+                  uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
+                }}
+                style={home.card_image}
+              />
+              <View style={home.movie_titleview}>
+                <Text style={home.movie_title}>
+                  {item.name.length > 18
+                    ? item.name.substring(0, 15) + '...'
+                    : item.name}
+                </Text>
+              </View>
+              <Text style={home.movie_category}>Adventure</Text>
+              <View style={home.button}>
+                <Button
+                  title="Detail"
+                  color={'#5F2EEA'}
+                  onPress={handleDetail}
+                />
+              </View>
+            </View>
+          ))}
       </ScrollView>
       <View style={home.margin}>
         <View style={home.card}>
@@ -296,6 +277,10 @@ const home = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
     marginTop: 10,
+  },
+  movie_titleview: {
+    overflow: 'hidden',
+    height: 35,
   },
   movie_category: {
     lineHeight: 30,

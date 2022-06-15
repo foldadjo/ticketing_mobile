@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import React, {useState, useEffect} from 'react';
 import Footer from '../../component/footer';
 // import axios from '../../utils/axios';
@@ -27,9 +28,21 @@ function Detail(props) {
   useEffect(() => {
     setForm({scheduleId: '', time: ''});
   }, []);
-  // const [data, setData] = useState([]);
-  // const [page, setPage] = useState(1);
-  const countries = ['Search Location', 'Jakarta', 'Tangerang', 'Bogor'];
+  const location = ['Search Location', 'Jakarta', 'Tangerang', 'Bogor'];
+  const timeDay = ['09.00', '11.00', '13.00', '15.00'];
+  const timeNight = ['17.00', '19.00', '20.00', '21.00'];
+
+  const data = [
+    {scheduleId: 1, time: '09.00,11.00,13.00,15.00,17.00,21.00'},
+    {scheduleId: 2, time: '09.00,13.00,21.00'},
+  ];
+
+  const handleTime = (scheduleId, time) => {
+    setForm({scheduleId: scheduleId, time: time});
+    if (time === '') {
+      alert('time is not available');
+    }
+  };
 
   const handleSchedule = async e => {
     try {
@@ -40,12 +53,7 @@ function Detail(props) {
       console.log(error.response);
     }
   };
-  const handleViewAll = () => {
-    props.navigation.navigate('ViewAll');
-  };
-  // const handleDetail = () => {
-  //   props.navigation.navigate('Detail');
-  // };
+
   return (
     <ScrollView style={detail.container} showsVerticalScrollIndicator={false}>
       <View style={detail.head}>
@@ -131,7 +139,7 @@ function Detail(props) {
           mode="date"
         />
         <SelectDropdown
-          data={countries}
+          data={location}
           onSelect={(selectedItem, index) => {
             console.log(selectedItem, index);
           }}
@@ -147,115 +155,87 @@ function Detail(props) {
             <Icon name="chevron-down" size={20} color={'black'} />
           )}
         />
-        <View style={detail.card}>
-          <View style={detail.card_head}>
-            <Image
-              source={require('../../assets/cineone.png')}
-              style={detail.card_premiere}
-            />
-            <View style={detail.address}>
-              <Text style={detail.card_adr}> Jakarta </Text>
+        {data.map(item => (
+          <View style={detail.card} key={item.scheduleId}>
+            <View style={detail.card_head}>
+              <Image
+                source={require('../../assets/cineone.png')}
+                style={detail.card_premiere}
+              />
+              <View style={detail.address}>
+                <Text style={detail.card_adr}> Jakarta </Text>
+              </View>
+            </View>
+            <View style={detail.rowtime}>
+              {timeDay.map(time => (
+                <TouchableOpacity
+                  style={detail.time}
+                  key={time}
+                  onPress={() =>
+                    handleTime(
+                      item.scheduleId,
+                      item.time.split(',').includes(time) ? time : '',
+                    )
+                  }>
+                  <Text
+                    style={
+                      item.time.split(',').includes(time)
+                        ? detail.time_yes
+                        : detail.time_no
+                    }>
+                    {time}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <View style={detail.rowtime}>
+              {timeNight.map(time => (
+                <TouchableOpacity
+                  style={detail.time}
+                  key={time}
+                  onPress={() =>
+                    handleTime(
+                      item.scheduleId,
+                      item.time.split(',').includes(time) ? time : '',
+                    )
+                  }>
+                  <Text
+                    style={
+                      item.time.split(',').includes(time)
+                        ? detail.time_yes
+                        : detail.time_no
+                    }>
+                    {time}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <View style={detail.rowtime}>
+              <View style={detail.price1}>
+                <Text style={detail.price_Text1}>Price</Text>
+              </View>
+              <View style={detail.price2}>
+                <Text style={detail.price_Text2}>Rp.60000/seat</Text>
+              </View>
+            </View>
+            <View style={detail.button}>
+              <Button
+                title={
+                  form.time === '' || form.scheduleId !== item.scheduleId
+                    ? 'Choise a Time'
+                    : 'Book now'
+                }
+                color={'#5F2EEA'}
+                onPress={
+                  form.time === '' || form.scheduleId !== item.scheduleId
+                    ? () => alert('choose time in this schedule first')
+                    : handleSchedule
+                }
+              />
             </View>
           </View>
-          <View style={detail.rowtime}>
-            <TouchableOpacity style={detail.time}>
-              <Text style={detail.time_yes}>09.00</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={detail.time}>
-              <Text style={detail.time_yes}>11.00</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={detail.time}>
-              <Text style={detail.time_yes}>13.00</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={detail.time}>
-              <Text style={detail.time_yes}>15.00</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={detail.rowtime}>
-            <TouchableOpacity style={detail.time}>
-              <Text style={detail.time_yes}>17.00</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={detail.time}>
-              <Text style={detail.time_yes}>19.00</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={detail.time}>
-              <Text style={detail.time_no}>20.00</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={detail.time}>
-              <Text style={detail.time_no}>21.00</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={detail.rowtime}>
-            <View style={detail.price1}>
-              <Text style={detail.price_Text1}>Price</Text>
-            </View>
-            <View style={detail.price2}>
-              <Text style={detail.price_Text2}>Rp.60000/seat</Text>
-            </View>
-          </View>
-          <View style={detail.button}>
-            <Button
-              title="Book now"
-              color={'#5F2EEA'}
-              onPress={handleSchedule}
-            />
-          </View>
-        </View>
-        <View style={detail.card}>
-          <View style={detail.card_head}>
-            <Image
-              source={require('../../assets/ebu.png')}
-              style={detail.card_premiere}
-            />
-            <View style={detail.address}>
-              <Text style={detail.card_adr}> Jakarta </Text>
-            </View>
-          </View>
-          <View style={detail.rowtime}>
-            <TouchableOpacity style={detail.time}>
-              <Text style={detail.time_yes}>09.00</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={detail.time}>
-              <Text style={detail.time_yes}>11.00</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={detail.time}>
-              <Text style={detail.time_yes}>13.00</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={detail.time}>
-              <Text style={detail.time_yes}>15.00</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={detail.rowtime}>
-            <TouchableOpacity style={detail.time}>
-              <Text style={detail.time_yes}>17.00</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={detail.time}>
-              <Text style={detail.time_yes}>19.00</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={detail.time}>
-              <Text style={detail.time_no}>20.00</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={detail.time}>
-              <Text style={detail.time_no}>21.00</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={detail.rowtime}>
-            <View style={detail.price1}>
-              <Text style={detail.price_Text1}>Price</Text>
-            </View>
-            <View style={detail.price2}>
-              <Text style={detail.price_Text2}>Rp.60000/seat</Text>
-            </View>
-          </View>
-          <View style={detail.button}>
-            <Button
-              title="Book now"
-              color={'#5F2EEA'}
-              onPress={handleSchedule}
-            />
-          </View>
-        </View>
-        <TouchableOpacity style={detail.time} onPress={handleViewAll}>
+        ))}
+        <TouchableOpacity style={detail.time}>
           <Text style={detail.viewAll}>View All</Text>
         </TouchableOpacity>
       </View>

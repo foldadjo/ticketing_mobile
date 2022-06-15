@@ -23,10 +23,24 @@ function ViewAll(props) {
   const [search, setSearch] = useState('');
   const [sorting, setSorting] = useState('sort');
   const [refreshing, setRefreshing] = useState(false);
-  // const [data, setData] = useState([]);
-  // const [page, setPage] = useState(1);
+  const [page, setPage] = useState(1);
   const sort = ['ID movie', 'A to Z', 'Z to A'];
   const [monthfil, setMonthfil] = useState('');
+
+  const data = [
+    {movieId: 1, name: 'Spiderman: no way home'},
+    {movieId: 2, name: 'Dr Strang'},
+    {movieId: 3, name: 'Dora the lost city'},
+    {movieId: 4, name: 'Dora the lost city'},
+    {movieId: 5, name: 'Dora the lost city'},
+    {movieId: 6, name: 'Dora the lost city'},
+    {movieId: 7, name: 'Spiderman: no way home'},
+    {movieId: 8, name: 'Dr Strang'},
+    {movieId: 9, name: 'Dora the lost city'},
+    {movieId: 10, name: 'Dora the lost city'},
+    {movieId: 11, name: 'Dora the lost city'},
+    {movieId: 12, name: 'Dora the lost city'},
+  ];
 
   console.log(sorting);
   console.log(search);
@@ -52,6 +66,7 @@ function ViewAll(props) {
     setSearch('');
     setMonthfil('');
     setRefreshing(true);
+    setPage(1);
     wait(2000).then(() => setRefreshing(false));
   }, []);
 
@@ -128,58 +143,46 @@ function ViewAll(props) {
         ))}
       </ScrollView>
       <View style={view.row}>
-        <View style={view.movie}>
-          <Image
-            source={{
-              uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
-            }}
-            style={view.card_image}
-          />
-          <Text style={view.movie_title}>Dora the lost city</Text>
-          <Text style={view.movie_category}>Adventure</Text>
-          <View style={(view.button, {width: 100})}>
-            <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
-          </View>
+        {data
+          .filter((item, idx) => idx >= 4 * (page - 1) && idx < page * 4)
+          .map(item => (
+            <View style={view.movie} key={item.id}>
+              <Image
+                source={{
+                  uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
+                }}
+                style={view.card_image}
+              />
+              <Text style={view.movie_title}>
+                {item.name.length > 15
+                  ? item.name.substring(0, 12) + '...'
+                  : item.name}
+              </Text>
+              <Text style={view.movie_category}>Adventure</Text>
+              <View style={(view.button, {width: 100})}>
+                <Button
+                  title="Detail"
+                  color={'#5F2EEA'}
+                  onPress={handleDetail}
+                />
+              </View>
+            </View>
+          ))}
+      </View>
+      <View style={view.page}>
+        <TouchableOpacity
+          onPress={page <= 1 ? () => '' : () => setPage(page - 1)}
+          style={page <= 1 ? view.pageN : view.pageA}>
+          <Text style={view.pagetext}>previous page..</Text>
+        </TouchableOpacity>
+        <View style={view.pageMid}>
+          <Text style={view.pagetext}>{page}</Text>
         </View>
-        <View style={view.movie}>
-          <Image
-            source={{
-              uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
-            }}
-            style={view.card_image}
-          />
-          <Text style={view.movie_title}>Dora the lost city</Text>
-          <Text style={view.movie_category}>Adventure</Text>
-          <View style={(view.button, {width: 100})}>
-            <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
-          </View>
-        </View>
-        <View style={view.movie}>
-          <Image
-            source={{
-              uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
-            }}
-            style={view.card_image}
-          />
-          <Text style={view.movie_title}>Dora the lost city</Text>
-          <Text style={view.movie_category}>Adventure</Text>
-          <View style={(view.button, {width: 100})}>
-            <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
-          </View>
-        </View>
-        <View style={view.movie}>
-          <Image
-            source={{
-              uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
-            }}
-            style={view.card_image}
-          />
-          <Text style={view.movie_title}>Dora the lost city</Text>
-          <Text style={view.movie_category}>Adventure</Text>
-          <View style={(view.button, {width: 100})}>
-            <Button title="Detail" color={'#5F2EEA'} onPress={handleDetail} />
-          </View>
-        </View>
+        <TouchableOpacity
+          onPress={page >= data.length / 4 ? () => '' : () => setPage(page + 1)}
+          style={page >= data.length / 4 ? view.pageN : view.pageA}>
+          <Text style={view.pagetext}>Next Page..</Text>
+        </TouchableOpacity>
       </View>
       <Footer {...props} />
     </ScrollView>
@@ -193,7 +196,7 @@ const view = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    margin: 30,
+    margin: 25,
     marginBottom: 10,
     flexWrap: 'wrap',
   },
@@ -228,7 +231,7 @@ const view = StyleSheet.create({
     borderRadius: 10,
     borderColor: '#D6D8E7',
     borderWidth: 1,
-    marginRight: 10,
+    marginRight: 15,
     marginBottom: 20,
     padding: 10,
     alignItems: 'center',
@@ -276,6 +279,41 @@ const view = StyleSheet.create({
     width: 250,
   },
   card_image: {width: 120, height: 180, borderRadius: 5},
+  page: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal: 30,
+    marginVertical: 20,
+  },
+  pagetext: {
+    color: 'white',
+    fontWeight: '600',
+  },
+  pageA: {
+    backgroundColor: '#5F2EEA',
+    width: 110,
+    height: 30,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pageN: {
+    backgroundColor: 'white',
+    width: 110,
+    height: 30,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pageMid: {
+    backgroundColor: '#5F2EEA',
+    width: 30,
+    height: 30,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 export default ViewAll;

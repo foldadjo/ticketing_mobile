@@ -16,7 +16,16 @@ import {
 function Booking(props) {
   const [selectedSeat, setSelectedSeat] = useState([]);
   const [reservedSeat, setReservedSeat] = useState(['A3', 'G8', 'F12']);
-  const [price, setPrice] = useState(50000);
+  const [price, setPrice] = useState(60000);
+  const [form, setForm] = useState({
+    seat: [],
+    totalPayment: '',
+  });
+
+  useEffect(() => {
+    setForm({seat: [], totalPayment: ''});
+  }, []);
+
   const seatLeft = [
     {number: 1},
     {number: 2},
@@ -53,12 +62,24 @@ function Booking(props) {
       setSelectedSeat(deleteSeat);
     } else {
       setSelectedSeat([...selectedSeat, seat]);
+      setForm({
+        seat: [...selectedSeat, seat],
+        totalPayment: `${[...selectedSeat, seat].length * price}`,
+      });
     }
   };
   console.log(selectedSeat);
-  const handlePayment = () => {
-    props.navigation.navigate('Payment');
+
+  const handlePayment = async e => {
+    try {
+      e.preventDefault();
+      console.log(form);
+      props.navigation.navigate('Payment');
+    } catch (error) {
+      console.log(error.response);
+    }
   };
+
   return (
     <View>
       <ScrollView

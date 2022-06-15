@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import Footer from '../../component/footer';
 // import axios from '../../utils/axios';
 import {

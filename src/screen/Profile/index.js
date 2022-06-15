@@ -45,6 +45,8 @@ function Profile(props) {
     wait(2000).then(() => setRefreshing(false));
   }, []);
 
+  console.log(photo);
+
   const handleChoosePhoto = async () => {
     await launchImageLibrary({noData: true}, response => {
       setModalVisible(false);
@@ -55,8 +57,8 @@ function Profile(props) {
     });
   };
 
-  const handleTakePhoto = async () => {
-    await launchCamera({noData: true}, response => {
+  const handleTakePhoto = async e => {
+    await launchCamera(e, response => {
       setModalVisible(false);
       // console.log(response);
       if (response) {
@@ -109,6 +111,7 @@ function Profile(props) {
   const handleTicket = () => {
     props.navigation.navigate('Ticket');
   };
+
   return (
     <View>
       <Modal animationType="fade" transparent={true} visible={modalVisible}>
@@ -128,7 +131,12 @@ function Profile(props) {
                 <Button
                   title="Open Camera"
                   color={'#5F2EEA'}
-                  onPress={() => handleTakePhoto({cameraType: 'front'})}
+                  onPress={() =>
+                    handleTakePhoto({
+                      quality: 0.8,
+                      mediaType: 'photo',
+                    })
+                  }
                 />
               </View>
               <View style={profile.modalbtn2}>
