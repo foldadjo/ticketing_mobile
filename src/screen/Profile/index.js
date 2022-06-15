@@ -108,7 +108,6 @@ function Profile(props) {
   };
   const handleLogout = async () => {
     try {
-      // eslint-disable-next-line no-alert
       alert('Logout');
       await AsyncStorage.clear();
       props.navigation.navigate('AuthScreen', {
