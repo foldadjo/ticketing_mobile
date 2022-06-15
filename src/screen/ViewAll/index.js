@@ -181,7 +181,7 @@ function ViewAll(props) {
           </View>
         </View>
       </View>
-      <Footer />
+      <Footer {...props} />
     </ScrollView>
   );
 }

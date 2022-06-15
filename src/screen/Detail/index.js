@@ -259,7 +259,7 @@ function Detail(props) {
           <Text style={detail.viewAll}>View All</Text>
         </TouchableOpacity>
       </View>
-      <Footer />
+      <Footer {...props} />
     </ScrollView>
   );
 }

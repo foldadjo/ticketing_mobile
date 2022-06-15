@@ -27,9 +27,11 @@ function Booking(props) {
       <ScrollView
         style={payment.container}
         showsVerticalScrollIndicator={false}>
-        <View style={payment.pay}>
-          <Text style={payment.textleft}>Total Payment</Text>
-          <Text style={payment.textright}>Rp.200000</Text>
+        <View style={payment.flex}>
+          <View style={payment.pay}>
+            <Text style={payment.textleft}>Total Payment</Text>
+            <Text style={payment.textright}>Rp.200000</Text>
+          </View>
         </View>
         <View style={payment.bottom}>
           <View style={payment.head}>
@@ -127,7 +129,7 @@ function Booking(props) {
             </View>
           </View>
         </View>
-        <Footer />
+        <Footer {...props} />
       </ScrollView>
     </View>
   );

@@ -54,17 +54,19 @@ function Profile(props) {
   };
   return (
     <View>
-      <View style={profile.pay}>
-        <TouchableOpacity onPress={handleProfile}>
-          <Text style={menu === true ? profile.textA : profile.textnA}>
-            Detail Account
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleOrder}>
-          <Text style={menu === false ? profile.textA : profile.textnA}>
-            Order History
-          </Text>
-        </TouchableOpacity>
+      <View style={profile.flex2}>
+        <View style={profile.pay}>
+          <TouchableOpacity onPress={handleProfile}>
+            <Text style={menu === true ? profile.textA : profile.textnA}>
+              Detail Account
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleOrder}>
+            <Text style={menu === false ? profile.textA : profile.textnA}>
+              Order History
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
       <ScrollView
         style={profile.container}
@@ -256,7 +258,7 @@ function Profile(props) {
             </View>
           </View>
         </View>
-        <Footer />
+        <Footer {...props} />
       </ScrollView>
     </View>
   );
@@ -317,6 +319,10 @@ const profile = StyleSheet.create({
   },
   flex: {
     alignItems: 'center',
+  },
+  flex2: {
+    alignItems: 'center',
+    backgroundColor: 'white',
   },
   carduser: {
     height: 450,

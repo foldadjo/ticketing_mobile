@@ -239,7 +239,7 @@ function Home(props) {
           </Text>
         </View>
       </View>
-      <Footer />
+      <Footer {...props} />
     </ScrollView>
   );
 }

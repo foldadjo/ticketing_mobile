@@ -242,7 +242,7 @@ function Booking(props) {
             </View>
           </View>
         </View>
-        <Footer />
+        <Footer {...props} />
       </ScrollView>
     </View>
   );
