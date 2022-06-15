@@ -52,6 +52,7 @@ URL_CLOUDINARY: "https://res.cloudinary.com/foldadjo",
 - [SelectDropdown](https://github.com/AdelRedaa97/react-native-select-dropdown)
 - [Icon](https://github.com/oblador/react-native-vector-icons)
 - [List-Icon/feather](https://feathericons.com)
+- [launch-Camera/launch-Image-Library](https://github.com/react-native-image-picker/react-native-image-picker)
 
 ## License
 

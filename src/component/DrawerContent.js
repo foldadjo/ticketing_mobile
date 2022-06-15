@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   DrawerContentScrollView,
@@ -20,21 +20,27 @@ function DrawerContent(props) {
       });
     } catch (error) {}
   };
+  const handleProfile = () => {
+    props.navigation.navigate('ProfileNavigator');
+  };
   return (
     <View style={styles.container}>
       <DrawerContentScrollView {...props}>
-        <View style={styles.containerProfile}>
-          <Image
-            source={{
-              uri: 'https://res.cloudinary.com/fazztrack/image/upload/v1655102148/tiketjauhar/user/opkiyvpmeejfdjbk8iba.jpg',
-            }}
-            style={styles.avatar}
-          />
-          <View style={styles.biodata}>
-            <Text style={styles.title}>Jauhar maknun</Text>
-            <Text style={styles.caption}>085155405031</Text>
+        <TouchableOpacity onPress={handleProfile}>
+          <View style={styles.containerProfile}>
+            <Image
+              source={{
+                uri: 'https://res.cloudinary.com/fazztrack/image/upload/v1655102148/tiketjauhar/user/opkiyvpmeejfdjbk8iba.jpg',
+              }}
+              style={styles.avatar}
+            />
+            <View style={styles.biodata}>
+              <Text style={styles.title}>Jauhar maknun</Text>
+              <Text style={styles.caption}>085155405031</Text>
+            </View>
           </View>
-        </View>
+        </TouchableOpacity>
+
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
       <View style={styles.containerSection}>
