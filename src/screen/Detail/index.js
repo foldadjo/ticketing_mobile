@@ -20,6 +20,7 @@ function Detail(props) {
   const [date, setDate] = useState(new Date());
   const [button, setButton] = useState(false);
   const [open, setOpen] = useState(false);
+  const [page, setPage] = useState(1);
   const [form, setForm] = useState({
     scheduleId: '',
     time: '',
@@ -35,6 +36,10 @@ function Detail(props) {
   const data = [
     {scheduleId: 1, time: '09.00,11.00,13.00,15.00,17.00,21.00'},
     {scheduleId: 2, time: '09.00,13.00,21.00'},
+    {scheduleId: 3, time: '09.00,11.00,13.00,15.00'},
+    {scheduleId: 4, time: '13.00,21.00'},
+    {scheduleId: 5, time: '09.00'},
+    {scheduleId: 6, time: '09.00,13.00,21.00'},
   ];
 
   const handleTime = (scheduleId, time) => {
@@ -155,88 +160,96 @@ function Detail(props) {
             <Icon name="chevron-down" size={20} color={'black'} />
           )}
         />
-        {data.map(item => (
-          <View style={detail.card} key={item.scheduleId}>
-            <View style={detail.card_head}>
-              <Image
-                source={require('../../assets/cineone.png')}
-                style={detail.card_premiere}
-              />
-              <View style={detail.address}>
-                <Text style={detail.card_adr}> Jakarta </Text>
+        {data
+          .filter((item, idx) => idx < page * 2)
+          .map(item => (
+            <View style={detail.card} key={item.scheduleId}>
+              <View style={detail.card_head}>
+                <Image
+                  source={require('../../assets/cineone.png')}
+                  style={detail.card_premiere}
+                />
+                <View style={detail.address}>
+                  <Text style={detail.card_adr}> Jakarta </Text>
+                </View>
               </View>
-            </View>
-            <View style={detail.rowtime}>
-              {timeDay.map(time => (
-                <TouchableOpacity
-                  style={detail.time}
-                  key={time}
-                  onPress={() =>
-                    handleTime(
-                      item.scheduleId,
-                      item.time.split(',').includes(time) ? time : '',
-                    )
-                  }>
-                  <Text
-                    style={
-                      item.time.split(',').includes(time)
-                        ? detail.time_yes
-                        : detail.time_no
+              <View style={detail.rowtime}>
+                {timeDay.map(time => (
+                  <TouchableOpacity
+                    style={detail.time}
+                    key={time}
+                    onPress={() =>
+                      handleTime(
+                        item.scheduleId,
+                        item.time.split(',').includes(time) ? time : '',
+                      )
                     }>
-                    {time}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-            <View style={detail.rowtime}>
-              {timeNight.map(time => (
-                <TouchableOpacity
-                  style={detail.time}
-                  key={time}
-                  onPress={() =>
-                    handleTime(
-                      item.scheduleId,
-                      item.time.split(',').includes(time) ? time : '',
-                    )
-                  }>
-                  <Text
-                    style={
-                      item.time.split(',').includes(time)
-                        ? detail.time_yes
-                        : detail.time_no
+                    <Text
+                      style={
+                        item.time.split(',').includes(time)
+                          ? detail.time_yes
+                          : detail.time_no
+                      }>
+                      {time}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              <View style={detail.rowtime}>
+                {timeNight.map(time => (
+                  <TouchableOpacity
+                    style={detail.time}
+                    key={time}
+                    onPress={() =>
+                      handleTime(
+                        item.scheduleId,
+                        item.time.split(',').includes(time) ? time : '',
+                      )
                     }>
-                    {time}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-            <View style={detail.rowtime}>
-              <View style={detail.price1}>
-                <Text style={detail.price_Text1}>Price</Text>
+                    <Text
+                      style={
+                        item.time.split(',').includes(time)
+                          ? detail.time_yes
+                          : detail.time_no
+                      }>
+                      {time}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
               </View>
-              <View style={detail.price2}>
-                <Text style={detail.price_Text2}>Rp.60000/seat</Text>
+              <View style={detail.rowtime}>
+                <View style={detail.price1}>
+                  <Text style={detail.price_Text1}>Price</Text>
+                </View>
+                <View style={detail.price2}>
+                  <Text style={detail.price_Text2}>Rp.60000/seat</Text>
+                </View>
+              </View>
+              <View style={detail.button}>
+                <Button
+                  title={
+                    form.time === '' || form.scheduleId !== item.scheduleId
+                      ? 'Choise a Time'
+                      : 'Book now'
+                  }
+                  color={'#5F2EEA'}
+                  onPress={
+                    form.time === '' || form.scheduleId !== item.scheduleId
+                      ? () => alert('choose time in this schedule first')
+                      : handleSchedule
+                  }
+                />
               </View>
             </View>
-            <View style={detail.button}>
-              <Button
-                title={
-                  form.time === '' || form.scheduleId !== item.scheduleId
-                    ? 'Choise a Time'
-                    : 'Book now'
-                }
-                color={'#5F2EEA'}
-                onPress={
-                  form.time === '' || form.scheduleId !== item.scheduleId
-                    ? () => alert('choose time in this schedule first')
-                    : handleSchedule
-                }
-              />
-            </View>
-          </View>
-        ))}
-        <TouchableOpacity style={detail.time}>
-          <Text style={detail.viewAll}>View All</Text>
+          ))}
+        <TouchableOpacity
+          style={detail.time}
+          onPress={
+            page >= data.length / 2 ? () => setPage(1) : () => setPage(page + 1)
+          }>
+          <Text style={detail.viewAll}>
+            {page >= data.length / 2 ? 'hide schedule' : 'View All'}
+          </Text>
         </TouchableOpacity>
       </View>
       <Footer {...props} />
