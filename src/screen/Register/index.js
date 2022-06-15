@@ -132,7 +132,6 @@ function Register(props) {
           <TextInput
             placeholder="Write your password"
             autoComplete="password"
-            keyboardType="visible-password"
             secureTextEntry={true}
             style={regis.form}
             onChangeText={newText => setPassword(newText)}

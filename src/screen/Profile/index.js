@@ -173,8 +173,7 @@ function Profile(props) {
                 <TextInput
                   placeholder="change password"
                   autoComplete="password-new"
-                  keyboardType="visible-password"
-                  caretHidden={true}
+                  secureTextEntry={true}
                   style={profile.form}
                   onChangeText={newText => setPass(newText)}
                   defaultValue={pass}
@@ -185,8 +184,7 @@ function Profile(props) {
                 <TextInput
                   placeholder="confirm your password"
                   autoComplete="password-new"
-                  keyboardType="visible-password"
-                  maxLength={15}
+                  secureTextEntry={true}
                   style={profile.form}
                   onChangeText={newText => setNewPass(newText)}
                   defaultValue={newPass}

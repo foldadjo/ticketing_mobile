@@ -82,7 +82,6 @@ function ForgotPassword(props) {
           <TextInput
             placeholder="Write your password"
             autoComplete="password"
-            keyboardType="visible-password"
             secureTextEntry={true}
             style={forgot.form}
             onChangeText={newText => setPassword(newText)}
@@ -94,7 +93,6 @@ function ForgotPassword(props) {
           <TextInput
             placeholder="Write your confirm password"
             autoComplete="password"
-            keyboardType="visible-password"
             secureTextEntry={true}
             style={forgot.form}
             onChangeText={newText => setCPass(newText)}

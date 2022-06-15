@@ -12,7 +12,7 @@ function SpleshSreen(props) {
     const token = await AsyncStorage.getItem('token');
     setTimeout(() => {
       if (token) {
-        props.navigation.navigate('AppScreen', {screen: 'home'});
+        props.navigation.navigate('AppScreen', {screen: 'HomeNavigator'});
       } else {
         props.navigation.navigate('AuthScreen');
       }

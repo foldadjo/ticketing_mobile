@@ -48,7 +48,7 @@ function Login(props) {
         );
         await AsyncStorage.setItem('id', result.data.data.id);
         alert(result.data.msg);
-        props.navigation.navigate('AppScreen', {screen: 'home'});
+        props.navigation.navigate('AppScreen', {screen: 'HomeNavigator'});
       }
       setLoading(false);
     } catch (error) {
@@ -108,7 +108,6 @@ function Login(props) {
           <TextInput
             placeholder="Write your password"
             autoComplete="password"
-            keyboardType="visible-password"
             secureTextEntry={true}
             style={login.form}
             onChangeText={newText => setPassword(newText)}
