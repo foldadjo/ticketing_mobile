@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable no-unused-vars */
 import React, {useState, useEffect} from 'react';
 import Footer from '../../component/footer';
@@ -52,7 +53,11 @@ function Profile(props) {
       setModalVisible(false);
       // console.log(response);
       if (response) {
-        setPhoto(response);
+        if (response.assets[0].fileSize > 1000000) {
+          alert("image size can't be more than 1mb");
+        } else {
+          setPhoto(response);
+        }
       }
     });
   };
@@ -60,9 +65,12 @@ function Profile(props) {
   const handleTakePhoto = async e => {
     await launchCamera(e, response => {
       setModalVisible(false);
-      // console.log(response);
       if (response) {
-        setPhoto(response);
+        if (response.assets[0].fileSize > 1000000) {
+          alert("image size can't be more than 1mb");
+        } else {
+          setPhoto(response);
+        }
       }
     });
   };
@@ -133,7 +141,7 @@ function Profile(props) {
                   color={'#5F2EEA'}
                   onPress={() =>
                     handleTakePhoto({
-                      quality: 0.8,
+                      quality: 0.6,
                       mediaType: 'photo',
                     })
                   }
