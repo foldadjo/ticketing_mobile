@@ -6,7 +6,6 @@ const image = require('../../assets/ss.jpg');
 function SpleshSreen(props) {
   useEffect(() => {
     cekToken();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const cekToken = async () => {
     const token = await AsyncStorage.getItem('token');

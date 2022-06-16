@@ -1,5 +1,3 @@
-/* eslint-disable no-alert */
-/* eslint-disable no-unused-vars */
 import React, {useState, useEffect} from 'react';
 import Footer from '../../component/footer';
 import AsyncStorage from '@react-native-async-storage/async-storage';

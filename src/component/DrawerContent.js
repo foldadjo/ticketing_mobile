@@ -12,7 +12,6 @@ import Icon from 'react-native-vector-icons/Feather';
 function DrawerContent(props) {
   const handleLogout = async () => {
     try {
-      // eslint-disable-next-line no-alert
       alert('Logout');
       await AsyncStorage.clear();
       props.navigation.navigate('AuthScreen', {

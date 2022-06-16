@@ -1,4 +1,3 @@
-/* eslint-disable no-alert */
 import React, {useEffect, useState} from 'react';
 import axios from '../../utils/axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';

@@ -1,4 +1,3 @@
-/* eslint-disable no-alert */
 import React, {useState, useEffect} from 'react';
 import Footer from '../../component/footer';
 // import axios from '../../utils/axios';
@@ -132,7 +131,6 @@ function Detail(props) {
           modal
           open={open}
           date={date}
-          // eslint-disable-next-line no-shadow
           onConfirm={date => {
             setOpen(false);
             setDate(date);

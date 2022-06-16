@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, {useState, useEffect} from 'react';
 import Footer from '../../component/footer';
 // import axios from '../../utils/axios';
@@ -259,8 +258,7 @@ function Booking(props) {
                 color={'#5F2EEA'}
                 onPress={
                   selectedSeat.length === 0
-                    ? // eslint-disable-next-line no-alert
-                      () => alert('choise a seat first')
+                    ? () => alert('choise a seat first')
                     : handlePayment
                 }
               />

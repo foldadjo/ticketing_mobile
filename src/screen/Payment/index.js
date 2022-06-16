@@ -18,7 +18,6 @@ function Booking(props) {
   const [mail, setMail] = useState('');
 
   const handlePay = () => {
-    // eslint-disable-next-line no-alert
     alert('cek Order History in profile screen');
     props.navigation.navigate('ProfileNavigator');
   };
