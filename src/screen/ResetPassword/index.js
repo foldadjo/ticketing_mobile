@@ -28,10 +28,15 @@ function ResetPassword(props) {
     try {
       console.log(form);
       setLoading(true);
-      const result = await axios.post('/auth/forgotPassword', form);
+      if (form.email === '') {
+        alert('write your email');
+      } else {
+        const result = await axios.post('/auth/forgotPassword', form);
+        console.log(result);
+        alert(result.data.msg);
+        props.navigation.navigate('ForgotPassword');
+      }
       setLoading(false);
-      alert(result.data.msg);
-      props.navigation.navigate('ForgotPassword');
     } catch (error) {
       setLoading(false);
       alert(error.response.data.msg);
