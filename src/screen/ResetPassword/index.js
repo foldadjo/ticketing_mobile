@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import axios from '../../utils/axios';
+import {useDispatch, useSelector} from 'react-redux';
+import {redux_resetPassword} from '../../store/action/auth';
 import {
   View,
   Text,
@@ -14,6 +15,10 @@ import {
 function ResetPassword(props) {
   const [mail, setMail] = useState('');
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const auth = useSelector(state => state.auth);
+
   const [form, setForm] = useState({
     email: '',
   });
@@ -31,9 +36,8 @@ function ResetPassword(props) {
       if (form.email === '') {
         alert('write your email');
       } else {
-        const result = await axios.post('/auth/forgotPassword', form);
-        console.log(result);
-        alert(result.data.msg);
+        const result = await dispatch(redux_resetPassword(form));
+        alert(result.value.data.msg);
         props.navigation.navigate('ForgotPassword');
       }
       setLoading(false);

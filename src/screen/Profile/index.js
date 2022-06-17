@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import Footer from '../../component/footer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -30,7 +30,7 @@ function Profile(props) {
   const [menu, setMenu] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [photo, setPhoto] = useState(null);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = React.useCallback(() => {

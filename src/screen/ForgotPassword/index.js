@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import axios from '../../utils/axios';
+import {useDispatch, useSelector} from 'react-redux';
+import {redux_forgotPassword} from '../../store/action/auth';
 import {
   View,
   Text,
@@ -17,6 +18,9 @@ function ForgotPassword(props) {
   const [password, setPassword] = useState('');
   const [cPass, setCPass] = useState('');
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const auth = useSelector(state => state.auth);
 
   const [form, setForm] = useState({
     keyChangePassword: '',
@@ -36,9 +40,9 @@ function ForgotPassword(props) {
     try {
       console.log(form);
       setLoading(true);
-      const result = await axios.patch('/auth/resetPassword', form);
+      const result = await dispatch(redux_forgotPassword(form));
       setLoading(false);
-      alert(result.data.msg);
+      alert(result.value.data.msg);
       props.navigation.navigate('Login');
     } catch (error) {
       setLoading(false);

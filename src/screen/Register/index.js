@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import axios from '../../utils/axios';
+import {useDispatch, useSelector} from 'react-redux';
+import {redux_register} from '../../store/action/auth';
 import {
   View,
   Text,
@@ -19,8 +20,9 @@ function Register(props) {
   const [mail, setMail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  // const dispatch = useDispatch();
-  // const auth = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+
+  const auth = useSelector(state => state.auth);
 
   const [form, setForm] = useState({
     firstName: '',
@@ -51,9 +53,8 @@ function Register(props) {
       } else if (form.password === '') {
         alert('password is required');
       } else {
-        const result = await axios.post('/auth/register', form);
-        console.log(result);
-        alert(result.data.msg);
+        const result = await dispatch(redux_register(form));
+        alert(result.value.data.msg);
         props.navigation.navigate('Login');
       }
       setLoading(false);

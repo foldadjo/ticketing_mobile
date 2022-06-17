@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import axios from '../../utils/axios';
+// import axios from '../../utils/axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch, useSelector} from 'react-redux';
+import {redux_login} from '../../store/action/auth';
 import {
   View,
   Text,
@@ -17,8 +19,9 @@ function Login(props) {
   const [mail, setMail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  // const dispatch = useDispatch();
-  // const auth = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+
+  const auth = useSelector(state => state.auth);
 
   const [form, setForm] = useState({
     email: '',
@@ -26,11 +29,13 @@ function Login(props) {
   });
 
   useEffect(() => {
+    auth;
     setForm({email: mail, password: password});
   }, [mail, password]);
 
   const handleLogin = async e => {
     try {
+      e.preventDefault();
       console.log(form);
       setLoading(true);
       if (mail === '') {
@@ -38,15 +43,15 @@ function Login(props) {
       } else if (password === '') {
         alert('password is required');
       } else {
-        const result = await axios.post('/auth/login', form);
-        console.log(result);
-        await AsyncStorage.setItem('token', result.data.data.token);
+        const result = await dispatch(redux_login(form));
+        console.log(result.value.data);
+        await AsyncStorage.setItem('token', result.value.data.data.token);
         await AsyncStorage.setItem(
           'refreshToken',
-          result.data.data.refreshToken,
+          result.value.data.data.refreshToken,
         );
-        await AsyncStorage.setItem('id', result.data.data.id);
-        alert(result.data.msg);
+        await AsyncStorage.setItem('id', result.value.data.data.id);
+        alert(result.value.data.msg);
         props.navigation.navigate('AppScreen', {screen: 'HomeNavigator'});
       }
       setLoading(false);
@@ -81,15 +86,6 @@ function Login(props) {
           Sign in with your data that you entered during your registration.
         </Text>
       </View>
-      {/* {!auth.msg ? null : auth.isError ? (
-        <div className="alert alert-danger" role="alert">
-          {auth.msg}
-        </div>
-      ) : (
-        <div className="alert alert-primary" role="alert">
-          {auth.msg}
-        </div>
-      )} */}
       <View style={login.formulir}>
         <View>
           <Text style={login.name}> Email </Text>

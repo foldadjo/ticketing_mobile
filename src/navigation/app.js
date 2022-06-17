@@ -16,6 +16,7 @@ import Payment from '../screen/Payment';
 
 import DrawerContent from '../component/DrawerContent';
 import Ticket from '../screen/Ticket';
+import Midtrans from '../screen/Midtrans';
 
 function HomeNavigator() {
   return (
@@ -43,6 +44,11 @@ function HomeNavigator() {
       <Stack.Screen
         component={Ticket}
         name="Ticket"
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        component={Midtrans}
+        name="Midtrans"
         options={{headerShown: false}}
       />
     </Stack.Navigator>
