@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
-// import axios from '../../utils/axios';
+import React, {useState, useEffect} from 'react';
 import Footer from '../../component/footer';
-
+import {useDispatch} from 'react-redux';
+import {getAllMovie} from '../../store/action/movie';
 import {
   View,
   Text,
@@ -12,6 +12,8 @@ import {
   TextInput,
   Image,
   RefreshControl,
+  ActivityIndicator,
+  FlatList,
 } from 'react-native';
 
 const wait = timeout => {
@@ -20,18 +22,15 @@ const wait = timeout => {
 
 function Home(props) {
   const [mail, setMail] = useState('');
+  const nowShowing = `${new Date().getMonth() + 1}`;
   const [monthfil, setMonthfil] = useState('');
   const [refreshing, setRefreshing] = useState(false);
-  const data = [
-    {movieId: 1, name: 'Spiderman: no way home'},
-    {movieId: 2, name: 'Dr Strang'},
-    {movieId: 3, name: 'Dora the lost city'},
-    {movieId: 4, name: 'Dora the lost city'},
-    {movieId: 5, name: 'Dora the lost city'},
-    {movieId: 6, name: 'Dora the lost city'},
-  ];
-  // const [page, setPage] = useState(1);
-  // const limit = 10;
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const [dataSoon, setDataSoon] = useState([]);
+  const limit = 10;
+  const dispatch = useDispatch();
+
   const month = [
     {number: 1, title: 'Januari'},
     {number: 2, title: 'Februari'},
@@ -46,26 +45,55 @@ function Home(props) {
     {number: 11, title: 'November'},
     {number: 12, title: 'Desember'},
   ];
-  // useEffect(() => {
-  //   getdataMovie();
-  // }, [getdataMovie, page]);
+  useEffect(() => {
+    getData();
+  }, [monthfil]);
+  const getData = async () => {
+    try {
+      setLoading(true);
+      const result = await dispatch(
+        getAllMovie(1, limit, nowShowing, '', 'id ASC'),
+      );
+      if (result.value.data.data === null) {
+        setData([]);
+      } else {
+        setData(result.value.data.data);
+        const resultall = await dispatch(
+          getAllMovie(1, limit, monthfil, '', 'id ASC'),
+        );
+        if (resultall.value.data.data === null) {
+          setDataSoon([]);
+        } else {
+          const movieComingsoon = resultall.value.data.data.filter(
+            item =>
+              item.releaseDate.split('T')[0].split('-')[1] !==
+              result.value.data.data[0].releaseDate.split('T')[0].split('-')[1],
+          );
+
+          setDataSoon(movieComingsoon);
+        }
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error.response);
+    }
+  };
 
   const onRefresh = React.useCallback(() => {
-    setMonthfil('');
     setRefreshing(true);
+    setMonthfil('');
+    getData();
     wait(2000).then(() => setRefreshing(false));
   }, []);
 
   const handleMonth = e => {
     setMonthfil(`${e}`);
-    console.log(monthfil);
   };
 
   const handlemail = async e => {
     try {
       e.preventDefault();
-      // const resultLogin = await axios.post("auth/login", form);
-      // dispatch(getUserById(resultLogin.data.data.id));
       console.log(mail);
     } catch (error) {
       console.log(error.response);
@@ -74,9 +102,10 @@ function Home(props) {
   const handleViewAll = () => {
     props.navigation.navigate('ViewAllNavigator');
   };
-  const handleDetail = () => {
-    props.navigation.navigate('Detail');
+  const handleDetail = movieId => {
+    props.navigation.navigate('Detail', {movieId: movieId});
   };
+
   return (
     <ScrollView
       style={home.container}
@@ -110,10 +139,10 @@ function Home(props) {
         </View>
         <ScrollView horizontal={true} style={home.row}>
           {data.map(item => (
-            <View style={home.movie} key={item.movieId}>
+            <View style={home.movie} key={item.id}>
               <Image
                 source={{
-                  uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
+                  uri: `https://res.cloudinary.com/fazztrack/image/upload/v1655471995/${item.image}`,
                 }}
                 style={home.card_image}
               />
@@ -124,12 +153,16 @@ function Home(props) {
                     : item.name}
                 </Text>
               </View>
-              <Text style={home.movie_category}>Adventure</Text>
+              <Text style={home.movie_category}>
+                {item.category.length > 18
+                  ? item.category.substring(0, 15) + '...'
+                  : item.category}
+              </Text>
               <View style={home.button}>
                 <Button
                   title="Detail"
                   color={'#5F2EEA'}
-                  onPress={handleDetail}
+                  onPress={() => handleDetail(item.id)}
                 />
               </View>
             </View>
@@ -167,14 +200,26 @@ function Home(props) {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <ScrollView horizontal={true} style={home.row}>
-        {data
-          .filter((item, idx) => idx < 10)
-          .map(item => (
-            <View style={home.movie} key={item.movieId}>
+      {loading === true ? (
+        <View style={home.row}>
+          <View style={home.movie}>
+            <View style={{alignItems: 'center', flex: 1, flexDirection: 'row'}}>
+              <ActivityIndicator size="large" color="#5F2EEA" />
+            </View>
+          </View>
+          <View style={home.movie}>
+            <View style={{alignItems: 'center', flex: 1, flexDirection: 'row'}}>
+              <ActivityIndicator size="large" color="#5F2EEA" />
+            </View>
+          </View>
+        </View>
+      ) : (
+        <ScrollView horizontal={true} style={home.row}>
+          {dataSoon.map(item => (
+            <View style={home.movie} key={item.id}>
               <Image
                 source={{
-                  uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
+                  uri: `https://res.cloudinary.com/fazztrack/image/upload/v1655471995/${item.image}`,
                 }}
                 style={home.card_image}
               />
@@ -185,17 +230,22 @@ function Home(props) {
                     : item.name}
                 </Text>
               </View>
-              <Text style={home.movie_category}>Adventure</Text>
+              <Text style={home.movie_category}>
+                {item.category.length > 18
+                  ? item.category.substring(0, 15) + '...'
+                  : item.category}
+              </Text>
               <View style={home.button}>
                 <Button
                   title="Detail"
                   color={'#5F2EEA'}
-                  onPress={handleDetail}
+                  onPress={() => handleDetail(item.id)}
                 />
               </View>
             </View>
           ))}
-      </ScrollView>
+        </ScrollView>
+      )}
       <View style={home.margin}>
         <View style={home.card}>
           <Text style={home.tag}>Be the vanguard of the</Text>

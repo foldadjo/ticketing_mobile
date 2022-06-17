@@ -4,6 +4,9 @@ import Footer from '../../component/footer';
 import SelectDropdown from 'react-native-select-dropdown';
 import DatePicker from 'react-native-date-picker';
 import Icon from 'react-native-vector-icons/Feather';
+import {useDispatch} from 'react-redux';
+import {getAllSchedule} from '../../store/action/schedule';
+import {getMovieById} from '../../store/action/movie';
 import {
   View,
   Text,
@@ -13,33 +16,87 @@ import {
   ScrollView,
   // TextInput,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 
 function Detail(props) {
   const [date, setDate] = useState(new Date());
   const [button, setButton] = useState(false);
   const [open, setOpen] = useState(false);
-  const [page, setPage] = useState(1);
+  const page = 1;
+  const [loading, setLoading] = useState(false);
+  const [limit, setLimit] = useState(2);
+  const [totalData, setTotalData] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
+  const [loc, setLoc] = useState('');
+  const dispatch = useDispatch();
   const [form, setForm] = useState({
     scheduleId: '',
     time: '',
   });
 
   useEffect(() => {
+    console.log(props.route.params);
+  }, []);
+
+  useEffect(() => {
     setForm({scheduleId: '', time: ''});
   }, []);
   const location = ['Search Location', 'Jakarta', 'Tangerang', 'Bogor'];
-  const timeDay = ['09.00', '11.00', '13.00', '15.00'];
-  const timeNight = ['17.00', '19.00', '20.00', '21.00'];
+  const timeDay = ['09:00', '11:00', '13:00', '15:00'];
+  const timeNight = ['17:00', '19:00', '20:00', '21:00'];
 
-  const data = [
-    {scheduleId: 1, time: '09.00,11.00,13.00,15.00,17.00,21.00'},
-    {scheduleId: 2, time: '09.00,13.00,21.00'},
-    {scheduleId: 3, time: '09.00,11.00,13.00,15.00'},
-    {scheduleId: 4, time: '13.00,21.00'},
-    {scheduleId: 5, time: '09.00'},
-    {scheduleId: 6, time: '09.00,13.00,21.00'},
-  ];
+  const [data, setData] = useState([]);
+  const [dataMovie, setDataMovie] = useState([
+    {
+      name: '',
+      category: '',
+      releaseDate: '',
+      image: 'tiketjauhar/movie/pfaymvwcjo53stw76qcs.png',
+      cast: '',
+      director: '',
+      duration: '',
+      synopsis: '',
+    },
+  ]);
+
+  useEffect(() => {
+    getData();
+  }, [limit, loc]);
+  const getData = async () => {
+    try {
+      setLoading(true);
+      const result = await dispatch(
+        getAllSchedule(page, limit, props.route.params.movieId, loc),
+      );
+      setTotalData(result.value.data.pagination.totalData);
+      setTotalPage(result.value.data.pagination.totalPage);
+      if (result.value.data.data === null) {
+        setData([]);
+      } else {
+        setData(result.value.data.data);
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error.response);
+    }
+  };
+  useEffect(() => {
+    getMovie();
+  }, []);
+  const getMovie = async () => {
+    try {
+      const result = await dispatch(getMovieById(props.route.params.movieId));
+      if (result.value.data.data === null) {
+        setDataMovie([]);
+      } else {
+        setDataMovie(result.value.data.data);
+      }
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
 
   const handleTime = (scheduleId, time) => {
     setForm({scheduleId: scheduleId, time: time});
@@ -64,49 +121,43 @@ function Detail(props) {
         <View style={detail.movie}>
           <Image
             source={{
-              uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
+              uri: `https://res.cloudinary.com/fazztrack/image/upload/v1655471995/${dataMovie[0].image}`,
             }}
             style={detail.card_image}
           />
         </View>
         <View style={detail.head}>
-          <Text style={detail.head_name}>Dora the lost city</Text>
-          <Text style={detail.head_category}>Adventure</Text>
+          <Text style={detail.head_name}>{dataMovie[0].name}</Text>
+          <Text style={detail.head_category}>{dataMovie[0].category}</Text>
         </View>
       </View>
       <View style={detail.row}>
         <View style={detail.flex}>
           <Text style={detail.title}>Release date</Text>
-          <Text style={detail.text}>June, 28 2022</Text>
+          <Text style={detail.text}>
+            {dataMovie[0].releaseDate.split('T')[0]}
+          </Text>
         </View>
         <View style={detail.flex}>
           <Text style={detail.title}>Directed by</Text>
-          <Text style={detail.text}>Jon Watss</Text>
+          <Text style={detail.text}>{dataMovie[0].director}</Text>
         </View>
       </View>
       <View style={detail.row}>
         <View style={detail.flex}>
           <Text style={detail.title}>Duration</Text>
-          <Text style={detail.text}>2 hrs 13 min</Text>
+          <Text style={detail.text}>{dataMovie[0].duration}</Text>
         </View>
         <View style={detail.flex}>
           <Text style={detail.title}>Casts</Text>
-          <Text style={detail.text}>Tom Holland, Robert Downey Jr., etc.</Text>
+          <Text style={detail.text}>{dataMovie[0].cast}</Text>
         </View>
       </View>
       <View style={detail.hr} />
       <View style={detail.row}>
         <View style={detail.flex}>
           <Text style={detail.text}>Synopsis</Text>
-          <Text style={detail.title}>
-            Thrilled by his experience with the Avengers, Peter returns home,
-            where he lives with his Aunt May, under the watchful eye of his new
-            mentor Tony Stark, Peter tries to fall back into his normal daily
-            routine - distracted by thoughts of proving himself to be more than
-            just your friendly neighborhood Spider-Man - but when the Vulture
-            emerges as a new villain, everything that Peter holds most important
-            will be threatened.{' '}
-          </Text>
+          <Text style={detail.title}>{dataMovie[0].synopsis}</Text>
         </View>
       </View>
 
@@ -144,7 +195,8 @@ function Detail(props) {
         <SelectDropdown
           data={location}
           onSelect={(selectedItem, index) => {
-            console.log(selectedItem, index);
+            setLoc(index === 0 ? '' : selectedItem);
+            setLimit(2);
           }}
           buttonTextAfterSelection={(selectedItem, index) => {
             return selectedItem;
@@ -158,97 +210,117 @@ function Detail(props) {
             <Icon name="chevron-down" size={20} color={'black'} />
           )}
         />
-        {data
-          .filter((item, idx) => idx < page * 2)
-          .map(item => (
-            <View style={detail.card} key={item.scheduleId}>
-              <View style={detail.card_head}>
-                <Image
-                  source={require('../../assets/cineone.png')}
-                  style={detail.card_premiere}
-                />
-                <View style={detail.address}>
-                  <Text style={detail.card_adr}> Jakarta </Text>
-                </View>
-              </View>
-              <View style={detail.rowtime}>
-                {timeDay.map(time => (
-                  <TouchableOpacity
-                    style={detail.time}
-                    key={time}
-                    onPress={() =>
-                      handleTime(
-                        item.scheduleId,
-                        item.time.split(',').includes(time) ? time : '',
-                      )
-                    }>
-                    <Text
-                      style={
-                        item.time.split(',').includes(time)
-                          ? detail.time_yes
-                          : detail.time_no
-                      }>
-                      {time}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-              <View style={detail.rowtime}>
-                {timeNight.map(time => (
-                  <TouchableOpacity
-                    style={detail.time}
-                    key={time}
-                    onPress={() =>
-                      handleTime(
-                        item.scheduleId,
-                        item.time.split(',').includes(time) ? time : '',
-                      )
-                    }>
-                    <Text
-                      style={
-                        item.time.split(',').includes(time)
-                          ? detail.time_yes
-                          : detail.time_no
-                      }>
-                      {time}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-              <View style={detail.rowtime}>
-                <View style={detail.price1}>
-                  <Text style={detail.price_Text1}>Price</Text>
-                </View>
-                <View style={detail.price2}>
-                  <Text style={detail.price_Text2}>Rp.60000/seat</Text>
-                </View>
-              </View>
-              <View style={detail.button}>
-                <Button
-                  title={
-                    form.time === '' || form.scheduleId !== item.scheduleId
-                      ? 'Choise a Time'
-                      : 'Book now'
-                  }
-                  color={'#5F2EEA'}
-                  onPress={
-                    form.time === '' || form.scheduleId !== item.scheduleId
-                      ? () => alert('choose time in this schedule first')
-                      : handleSchedule
-                  }
-                />
+        {data.map(item => (
+          <View style={detail.card} key={item.id}>
+            <View style={detail.card_head}>
+              <Image
+                source={
+                  item.premiere !== 'hiflix'
+                    ? item.premiere !== 'Ebu.Id'
+                      ? require('../../assets/cineone.png')
+                      : require('../../assets/ebu.png')
+                    : require('../../assets/hiflix.png')
+                }
+                style={detail.card_premiere}
+              />
+              <View style={detail.address}>
+                <Text style={detail.card_adr}> {item.location} </Text>
               </View>
             </View>
-          ))}
-        <TouchableOpacity
-          style={detail.time}
-          onPress={
-            page >= data.length / 2 ? () => setPage(1) : () => setPage(page + 1)
-          }>
-          <Text style={detail.viewAll}>
-            {page >= data.length / 2 ? 'hide schedule' : 'View All'}
-          </Text>
-        </TouchableOpacity>
+            <View style={detail.rowtime}>
+              {timeDay.map(time => (
+                <TouchableOpacity
+                  style={detail.time}
+                  key={time}
+                  onPress={() =>
+                    handleTime(
+                      item.id,
+                      item.time.split(',').includes(time) ? time : '',
+                    )
+                  }>
+                  <Text
+                    style={
+                      item.time.split(',').includes(time)
+                        ? detail.time_yes
+                        : detail.time_no
+                    }>
+                    {time}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <View style={detail.rowtime}>
+              {timeNight.map(time => (
+                <TouchableOpacity
+                  style={detail.time}
+                  key={time}
+                  onPress={() =>
+                    handleTime(
+                      item.id,
+                      item.time.split(',').includes(time) ? time : '',
+                    )
+                  }>
+                  <Text
+                    style={
+                      item.time.split(',').includes(time)
+                        ? detail.time_yes
+                        : detail.time_no
+                    }>
+                    {time}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <View style={detail.rowtime}>
+              <View style={detail.price1}>
+                <Text style={detail.price_Text1}>Price</Text>
+              </View>
+              <View style={detail.price2}>
+                <Text style={detail.price_Text2}>Rp.{item.price}/seat</Text>
+              </View>
+            </View>
+            <View style={detail.button}>
+              <Button
+                title={
+                  form.time === '' || form.scheduleId !== item.id
+                    ? 'Choise a Time'
+                    : 'Book now'
+                }
+                color={'#5F2EEA'}
+                onPress={
+                  form.time === '' || form.scheduleId !== item.id
+                    ? () => alert('choose time in this schedule first')
+                    : handleSchedule
+                }
+              />
+            </View>
+          </View>
+        ))}
+        {data.length <= 0 ? (
+          <View style={detail.time}>
+            <Text style={detail.viewAll}>Schedule not found</Text>
+          </View>
+        ) : totalPage === 1 && data.length <= 2 ? (
+          <View style={detail.time}>
+            <Text style={detail.viewAll}> data schedule no more than 2 </Text>
+          </View>
+        ) : (
+          <TouchableOpacity
+            style={detail.time}
+            onPress={
+              limit >= totalData ? () => setLimit(2) : () => setLimit(limit + 2)
+            }>
+            {loading === true ? (
+              <View style={detail.viewAll}>
+                <ActivityIndicator size="small" color="#5F2EEA" />
+              </View>
+            ) : (
+              <Text style={detail.viewAll}>
+                {limit >= totalData ? 'hide schedule' : 'View All'}
+              </Text>
+            )}
+          </TouchableOpacity>
+        )}
       </View>
       <Footer {...props} />
     </ScrollView>
