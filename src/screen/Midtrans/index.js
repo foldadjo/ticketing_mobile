@@ -1,14 +1,18 @@
 import React from 'react';
 import {ScrollView} from 'react-native';
-import WebView, {webView} from 'react-native-webview';
+import {WebView} from 'react-native-webview';
 import Footer from '../../component/footer';
 
 function Midtrans(props) {
+  const redirectUrl = props.route.params.redirectUrl;
+  console.log(redirectUrl);
   return (
-    <ScrollView>
-      <WebView source={{uri: `${props.route.params}`}} />
-      <Footer {...props} />
-    </ScrollView>
+    <WebView
+      source={{
+        uri: redirectUrl,
+      }}
+      //   style={{marginTop: 20}}
+    />
   );
 }
 

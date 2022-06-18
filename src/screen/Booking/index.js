@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Footer from '../../component/footer';
-// import axios from '../../utils/axios';
+import {useDispatch} from 'react-redux';
+import {getSeatBooking} from '../../store/action/booking';
 import {
   View,
   Text,
@@ -8,22 +9,57 @@ import {
   TouchableOpacity,
   Button,
   ScrollView,
-  // TextInput,
   Image,
 } from 'react-native';
 
 function Booking(props) {
   const [selectedSeat, setSelectedSeat] = useState([]);
-  const [reservedSeat, setReservedSeat] = useState(['A3', 'G8', 'F12']);
-  const [price, setPrice] = useState(60000);
+  const [reservedSeat, setReservedSeat] = useState([]);
+  const price = props.route.params.data[0].price;
+  const dataSchedule = props.route.params.dataSchedule;
+  const dataSchedule2 = props.route.params.data[0];
+  const dispatch = useDispatch();
+
   const [form, setForm] = useState({
-    seat: [],
+    seat: selectedSeat,
     totalPayment: '',
   });
 
   useEffect(() => {
-    setForm({seat: [], totalPayment: ''});
+    console.log(props.route.params);
   }, []);
+
+  useEffect(() => {
+    getReservedSeat();
+  }, []);
+  const getReservedSeat = async () => {
+    try {
+      console.log(
+        dataSchedule.scheduleId,
+        dataSchedule.timeBooking,
+        dataSchedule.dateBooking,
+      );
+      const result = await dispatch(
+        getSeatBooking(
+          dataSchedule.scheduleId,
+          dataSchedule.timeBooking,
+          dataSchedule.dateBooking,
+        ),
+      );
+      console.log(result);
+      if (result.value.data.data === null) {
+        setReservedSeat([]);
+      } else {
+        setReservedSeat(result.value.data.data);
+      }
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
+  useEffect(() => {
+    form;
+  }, [selectedSeat]);
 
   const seatLeft = [
     {number: 1},
@@ -63,21 +99,25 @@ function Booking(props) {
         return el !== seat;
       });
       setSelectedSeat(deleteSeat);
+      setForm({
+        ...dataSchedule,
+        seat: deleteSeat,
+        totalPayment: `${deleteSeat.length * price}`,
+      });
     } else {
       setSelectedSeat([...selectedSeat, seat]);
       setForm({
+        ...dataSchedule,
         seat: [...selectedSeat, seat],
         totalPayment: `${[...selectedSeat, seat].length * price}`,
       });
     }
   };
-  console.log(selectedSeat);
 
-  const handlePayment = async e => {
+  const handlePayment = async () => {
     try {
-      e.preventDefault();
       console.log(form);
-      props.navigation.navigate('Payment');
+      props.navigation.navigate('Payment', {dataBooking: form});
     } catch (error) {
       console.log(error.response);
     }
@@ -202,22 +242,34 @@ function Booking(props) {
             <View style={booking.card}>
               <View style={booking.card_head}>
                 <Image
-                  source={require('../../assets/cineone.png')}
+                  source={
+                    dataSchedule2.premiere !== 'hiflix'
+                      ? dataSchedule2.premiere !== 'Ebu.Id'
+                        ? require('../../assets/cineone.png')
+                        : require('../../assets/ebu.png')
+                      : require('../../assets/hiflix.png')
+                  }
                   style={booking.card_premiere}
                 />
                 <View>
-                  <Text style={booking.text1}> CineOne 21 Cinema </Text>
+                  <Text style={booking.text1}>
+                    {dataSchedule2.premiere} Cinema
+                  </Text>
                 </View>
                 <View>
-                  <Text style={booking.text2}> Dora the lost city </Text>
+                  <Text style={booking.text2}> {dataSchedule2.name} </Text>
                 </View>
               </View>
               <View style={booking.row}>
                 <View style={booking.flex3}>
-                  <Text style={booking.textleft}>Tuesday, 07 july 2022</Text>
+                  <Text style={booking.textleft}>
+                    {dataSchedule.dateBooking}
+                  </Text>
                 </View>
                 <View style={booking.flex2}>
-                  <Text style={booking.textright}>19.00</Text>
+                  <Text style={booking.textright}>
+                    {dataSchedule.timeBooking}
+                  </Text>
                 </View>
               </View>
               <View style={booking.row}>

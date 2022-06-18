@@ -29,10 +29,12 @@ function Detail(props) {
   const [totalData, setTotalData] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const [loc, setLoc] = useState('');
+  const [viewall, setViewall] = useState('View All');
   const dispatch = useDispatch();
   const [form, setForm] = useState({
     scheduleId: '',
-    time: '',
+    dateBooking: '',
+    timeBooking: '',
   });
 
   useEffect(() => {
@@ -40,7 +42,7 @@ function Detail(props) {
   }, []);
 
   useEffect(() => {
-    setForm({scheduleId: '', time: ''});
+    setForm({scheduleId: '', dateBooking: '', timeBooking: ''});
   }, []);
   const location = ['Search Location', 'Jakarta', 'Tangerang', 'Bogor'];
   const timeDay = ['09:00', '11:00', '13:00', '15:00'];
@@ -76,6 +78,9 @@ function Detail(props) {
       } else {
         setData(result.value.data.data);
       }
+      limit >= result.value.data.pagination.totalData
+        ? setViewall('hide schedule')
+        : setViewall('View All');
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -98,18 +103,20 @@ function Detail(props) {
     }
   };
 
-  const handleTime = (scheduleId, time) => {
-    setForm({scheduleId: scheduleId, time: time});
+  const handleTime = (scheduleId, time, date) => {
+    setForm({scheduleId: scheduleId, dateBooking: date, timeBooking: time});
     if (time === '') {
       alert('time is not available');
     }
   };
 
-  const handleSchedule = async e => {
+  const handleSchedule = async id => {
     try {
-      e.preventDefault();
       console.log(form);
-      props.navigation.navigate('Booking');
+      props.navigation.navigate('Booking', {
+        dataSchedule: form,
+        data: data.filter(item => item.id === id),
+      });
     } catch (error) {
       console.log(error.response);
     }
@@ -236,6 +243,11 @@ function Detail(props) {
                     handleTime(
                       item.id,
                       item.time.split(',').includes(time) ? time : '',
+                      `${date.getFullYear()}-${
+                        (date.getMonth() + 1).length === 2
+                          ? date.getMonth() + 1
+                          : '0' + (date.getMonth() + 1)
+                      }-${date.getDate()}`,
                     )
                   }>
                   <Text
@@ -258,6 +270,7 @@ function Detail(props) {
                     handleTime(
                       item.id,
                       item.time.split(',').includes(time) ? time : '',
+                      `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`,
                     )
                   }>
                   <Text
@@ -282,7 +295,7 @@ function Detail(props) {
             <View style={detail.button}>
               <Button
                 title={
-                  form.time === '' || form.scheduleId !== item.id
+                  form.timeBooking === '' || form.scheduleId !== item.id
                     ? 'Choise a Time'
                     : 'Book now'
                 }
@@ -290,7 +303,7 @@ function Detail(props) {
                 onPress={
                   form.time === '' || form.scheduleId !== item.id
                     ? () => alert('choose time in this schedule first')
-                    : handleSchedule
+                    : () => handleSchedule(item.id)
                 }
               />
             </View>
@@ -315,9 +328,7 @@ function Detail(props) {
                 <ActivityIndicator size="small" color="#5F2EEA" />
               </View>
             ) : (
-              <Text style={detail.viewAll}>
-                {limit >= totalData ? 'hide schedule' : 'View All'}
-              </Text>
+              <Text style={detail.viewAll}>{viewall}</Text>
             )}
           </TouchableOpacity>
         )}

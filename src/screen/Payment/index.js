@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import {useDispatch} from 'react-redux';
 import Footer from '../../component/footer';
-// import axios from '../../utils/axios';
+import {createBooking} from '../../store/action/booking';
 import {
   View,
   Text,
@@ -12,14 +13,35 @@ import {
   Image,
 } from 'react-native';
 
-function Booking(props) {
+function Payment(props) {
   const [lastName, setLastName] = useState('');
   const [noTelp, setNoTelp] = useState('');
   const [mail, setMail] = useState('');
+  const [data, setData] = useState({});
+  const [url, setUrl] = useState('');
+  const dataBooking = props.route.params.dataBooking;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log(props.route.params);
+  }, []);
+
+  useEffect(() => {
+    goToPayment();
+  }, []);
+  const goToPayment = async () => {
+    try {
+      const result = await dispatch(createBooking(dataBooking));
+      setData(result.value.data.data.setData);
+      setUrl(result.value.data.data.redirectUrl);
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
 
   const handlePay = () => {
-    alert('cek Order History in profile screen');
-    props.navigation.navigate('ProfileNavigator');
+    console.log(url);
+    props.navigation.navigate('Midtrans', {redirectUrl: url});
   };
   return (
     <View>
@@ -29,7 +51,7 @@ function Booking(props) {
         <View style={payment.flex}>
           <View style={payment.pay}>
             <Text style={payment.textleft}>Total Payment</Text>
-            <Text style={payment.textright}>Rp.200000</Text>
+            <Text style={payment.textright}>Rp.{dataBooking.totalPayment}</Text>
           </View>
         </View>
         <View style={payment.bottom}>
@@ -251,4 +273,4 @@ const payment = StyleSheet.create({
   },
 });
 
-export default Booking;
+export default Payment;
