@@ -29,3 +29,10 @@ export const createBooking = form => {
     payload: axios.post(`/booking`, form),
   };
 };
+
+export const updateStatusBooking = form => {
+  return {
+    type: 'UPDATE_STATUS_BOOKING',
+    payload: axios.patch(`/booking`, form),
+  };
+};

@@ -1,8 +1,15 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Footer from '../../component/footer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-// import axios from '../../utils/axios';
+import {useDispatch} from 'react-redux';
+import {
+  getUser,
+  updateProfile,
+  updatePassword,
+  updateImage,
+  deleteImage,
+} from '../../store/action/user';
 import {
   View,
   Text,
@@ -14,7 +21,7 @@ import {
   Image,
   Modal,
   RefreshControl,
-  // ActivityIndicator,
+  ActivityIndicator,
 } from 'react-native';
 
 const wait = timeout => {
@@ -22,16 +29,48 @@ const wait = timeout => {
 };
 
 function Profile(props) {
+  //form
+  const [id, setId] = useState('');
+  const [photo, setPhoto] = useState('null');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [noTelp, setNoTelp] = useState('');
+  const [formProfile, setFormProfile] = useState({
+    firstName: '',
+    lastName: '',
+    noTelp: '',
+  });
   const [pass, setPass] = useState('');
   const [newPass, setNewPass] = useState('');
+  const [formPassword, setFormPassword] = useState({
+    newPassword: '',
+    confirmPassword: '',
+  });
+  //modal & menu
   const [menu, setMenu] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  const [photo, setPhoto] = useState(null);
-  // const [loading, setLoading] = useState(false);
+  //rendering
+  const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  //data
+  const [data, setData] = useState({
+    name: 'user ticketing',
+    image: 'null',
+    noTelp: '',
+  });
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    handleUser();
+  }, []);
+  const handleUser = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('id');
+      setId(userId);
+      const result = await dispatch(getUser(userId));
+      setData(result.value.data.data[0]);
+    } catch (error) {}
+  };
 
   const onRefresh = React.useCallback(() => {
     setFirstName('');
@@ -44,18 +83,15 @@ function Profile(props) {
     wait(2000).then(() => setRefreshing(false));
   }, []);
 
-  console.log(photo);
-
   const handleChoosePhoto = async () => {
     await launchImageLibrary({noData: true}, response => {
       try {
         setModalVisible(false);
-        // console.log(response);
         if (response) {
           if (response.assets[0].fileSize > 1000000) {
             alert("image size can't be more than 1mb");
           } else {
-            setPhoto(response);
+            setPhoto(URL.createObjectURL(response));
           }
         }
       } catch (error) {
@@ -65,25 +101,49 @@ function Profile(props) {
   };
 
   const handleTakePhoto = async e => {
-    await launchCamera(e, response => {
-      try {
-        setModalVisible(false);
-        if (response) {
-          if (response.assets[0].fileSize > 1000000) {
-            alert("image size can't be more than 1mb");
-          } else {
-            setPhoto(response);
+    try {
+      await launchCamera(e, response => {
+        try {
+          setModalVisible(false);
+          if (response) {
+            if (response.assets[0].fileSize > 1000000) {
+              alert("image size can't be more than 1mb");
+            } else {
+              setPhoto(URL.createObjectURL(response));
+              console.log(URL.createObjectURL(response));
+            }
           }
+        } catch (error) {
+          console.log(error);
         }
-      } catch (error) {
-        console.log(error);
+      });
+      if (photo !== 'null') {
+        const result = await dispatch(updateImage(id, photo));
+        console.log(result.value.data.data.image);
+        setData(...data, {image: result.value.data.data.image});
+      } else {
+        alert('Change picture failed');
       }
-    });
+      setModalVisible(false);
+    } catch (error) {
+      console.log(error.response);
+    }
   };
 
-  const deleteImage = () => {
-    setModalVisible(false);
-    setPhoto(null);
+  const deletePicture = async () => {
+    try {
+      setModalVisible(false);
+      setLoading(true);
+      const result = await dispatch(deleteImage(id));
+      setPhoto(null);
+      setData(...data, {image: 'null'});
+      setLoading(false);
+      alert(result.value.data.msg);
+    } catch (error) {
+      setLoading(false);
+      alert('image is null');
+      console.log(error);
+    }
   };
 
   const handleOrder = () => {
@@ -92,26 +152,67 @@ function Profile(props) {
   const handleProfile = () => {
     setMenu(true);
   };
-  const handleChangeProfile = async e => {
+
+  useEffect(() => {
+    setFormProfile({firstName: firstName, lastName: lastName, noTelp: noTelp});
+  }, [firstName, lastName, noTelp]);
+
+  const handleChangeProfile = async () => {
     try {
-      const formProfile = {
-        firstName: firstName,
-        lastName: lastName,
-        noTelp: noTelp,
-      };
-      console.log(formProfile);
+      setLoading(true);
+      if (firstName === '' && noTelp === '') {
+        alert('form change profile is require');
+      } else {
+        const result = await dispatch(updateProfile(id, formProfile));
+        const name = data.name.split(' ');
+        const newData = {
+          name: `${
+            result.value.data.data.firstName
+              ? result.value.data.data.firstName
+              : name[0]
+          } ${
+            result.value.data.data.lastName
+              ? result.value.data.data.lastName
+              : name[1]
+          }`,
+          noTelp: result.value.data.data.noTelp
+            ? result.value.data.data.noTelp
+            : data.noTelp,
+          image: data.image,
+        };
+        setData(newData);
+        setFirstName('');
+        setLastName('');
+        setNoTelp('');
+        alert(result.value.data.msg);
+      }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log(error.response);
     }
   };
+
+  useEffect(() => {
+    setFormPassword({newPassword: pass, confirmPassword: newPass});
+  }, [pass, newPass]);
   const handleChangePassword = async e => {
     try {
-      const formPass = {newPassword: pass, confirmPassword: newPass};
-      console.log(formPass);
+      setLoading(true);
+      if (pass === '' || newPass === '') {
+        alert('form change password is required');
+      } else {
+        const result = await dispatch(updatePassword(id, formPassword));
+        alert(result.value.data.msg);
+      }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+      alert(error.response.value.data.msg);
       console.log(error.response);
     }
   };
+
   const handleLogout = async () => {
     try {
       alert('Logout');
@@ -121,6 +222,7 @@ function Profile(props) {
       });
     } catch (error) {}
   };
+
   const handleTicket = () => {
     props.navigation.navigate('Ticket');
   };
@@ -156,7 +258,7 @@ function Profile(props) {
                 <Button
                   title="Delete Image"
                   color={'red'}
-                  onPress={deleteImage}
+                  onPress={deletePicture}
                 />
               </View>
             </View>
@@ -193,16 +295,26 @@ function Profile(props) {
               <Text style={profile.head_card}>INFO</Text>
               <View style={profile.carduser_item}>
                 <TouchableOpacity onPress={() => setModalVisible(true)}>
-                  <Image
-                    source={{
-                      uri: 'https://res.cloudinary.com/fazztrack/image/upload/v1655102148/tiketjauhar/user/opkiyvpmeejfdjbk8iba.jpg',
-                    }}
-                    style={profile.avatar}
-                  />
+                  {data.image === 'null' ? (
+                    <Image
+                      source={{
+                        uri: 'https://res.cloudinary.com/fazztrack/image/upload/v1655621667/tiketjauhar/user/images_qygn7n.jpg',
+                      }}
+                      style={profile.avatar}
+                    />
+                  ) : (
+                    <Image
+                      source={{
+                        uri: `https://res.cloudinary.com/fazztrack/image/upload/v1655102148/${data.image}`,
+                      }}
+                      style={profile.avatar}
+                    />
+                  )}
                 </TouchableOpacity>
-
-                <Text style={profile.textname}>Jauhar Maknun</Text>
-                <Text style={profile.tel}>085155405031</Text>
+                <Text style={profile.textname}>{data.name}</Text>
+                <Text style={profile.tel}>
+                  {data.noTelp === '' ? 'number phone not add' : data.noTelp}
+                </Text>
                 <View style={profile.hr1}>
                   <View style={profile.hr} />
                 </View>
@@ -263,11 +375,15 @@ function Profile(props) {
           </View>
           <View style={profile.btn}>
             <View style={profile.button}>
-              <Button
-                title="Update Change"
-                color={'#5F2EEA'}
-                onPress={handleChangeProfile}
-              />
+              {loading === true ? (
+                <ActivityIndicator size="large" color="white" />
+              ) : (
+                <Button
+                  title="Update Change"
+                  color={'#5F2EEA'}
+                  onPress={handleChangeProfile}
+                />
+              )}
             </View>
           </View>
           <View style={profile.flex}>
@@ -304,11 +420,15 @@ function Profile(props) {
           </View>
           <View style={profile.btn}>
             <View style={profile.button}>
-              <Button
-                title="Update Change"
-                color={'#5F2EEA'}
-                onPress={handleChangePassword}
-              />
+              {loading === true ? (
+                <ActivityIndicator size="large" color="white" />
+              ) : (
+                <Button
+                  title="Update Change"
+                  color={'#5F2EEA'}
+                  onPress={handleChangePassword}
+                />
+              )}
             </View>
           </View>
         </View>

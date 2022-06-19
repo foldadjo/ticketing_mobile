@@ -11,14 +11,14 @@ import {
   ScrollView,
   TextInput,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 
 function Payment(props) {
   const [lastName, setLastName] = useState('');
   const [noTelp, setNoTelp] = useState('');
   const [mail, setMail] = useState('');
-  const [data, setData] = useState({});
-  const [url, setUrl] = useState('');
+  const [loading, setLoading] = useState(false);
   const dataBooking = props.route.params.dataBooking;
   const dispatch = useDispatch();
 
@@ -26,23 +26,20 @@ function Payment(props) {
     console.log(props.route.params);
   }, []);
 
-  useEffect(() => {
-    goToPayment();
-  }, []);
   const goToPayment = async () => {
     try {
+      setLoading(true);
       const result = await dispatch(createBooking(dataBooking));
-      setData(result.value.data.data.setData);
-      setUrl(result.value.data.data.redirectUrl);
+      setLoading(false);
+      props.navigation.navigate('Midtrans', {
+        redirectUrl: result.value.data.data.redirectUrl,
+      });
     } catch (error) {
+      setLoading(false);
       console.log(error.response);
     }
   };
 
-  const handlePay = () => {
-    console.log(url);
-    props.navigation.navigate('Midtrans', {redirectUrl: url});
-  };
   return (
     <View>
       <ScrollView
@@ -142,11 +139,15 @@ function Payment(props) {
           </View>
           <View style={payment.btn}>
             <View style={payment.button}>
-              <Button
-                title="Pay your order"
-                color={'#5F2EEA'}
-                onPress={handlePay}
-              />
+              {loading === true ? (
+                <ActivityIndicator size="large" color="white" />
+              ) : (
+                <Button
+                  title="Pay your order"
+                  color={'#5F2EEA'}
+                  onPress={goToPayment}
+                />
+              )}
             </View>
           </View>
         </View>

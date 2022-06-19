@@ -31,6 +31,7 @@ function Booking(props) {
 
   useEffect(() => {
     getReservedSeat();
+    setSelectedSeat([]);
   }, []);
   const getReservedSeat = async () => {
     try {

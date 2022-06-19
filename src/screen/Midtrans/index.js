@@ -1,7 +1,5 @@
 import React from 'react';
-import {ScrollView} from 'react-native';
 import {WebView} from 'react-native-webview';
-import Footer from '../../component/footer';
 
 function Midtrans(props) {
   const redirectUrl = props.route.params.redirectUrl;
@@ -11,7 +9,7 @@ function Midtrans(props) {
       source={{
         uri: redirectUrl,
       }}
-      //   style={{marginTop: 20}}
+      style={{marginTop: 20}}
     />
   );
 }

@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch} from 'react-redux';
+import {getUser} from '../store/action/user';
 import {
   DrawerContentScrollView,
   DrawerItem,
@@ -10,6 +12,24 @@ import {
 import Icon from 'react-native-vector-icons/Feather';
 
 function DrawerContent(props) {
+  const [data, setData] = useState({
+    name: 'user ticketing',
+    image: 'null',
+    noTelp: '',
+  });
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    handleUser();
+  }, [props]);
+  const handleUser = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('id');
+      const result = await dispatch(getUser(userId));
+      setData(result.value.data.data[0]);
+    } catch (error) {}
+  };
+
   const handleLogout = async () => {
     try {
       alert('Logout');
@@ -27,15 +47,26 @@ function DrawerContent(props) {
       <DrawerContentScrollView {...props}>
         <TouchableOpacity onPress={handleProfile}>
           <View style={styles.containerProfile}>
-            <Image
-              source={{
-                uri: 'https://res.cloudinary.com/fazztrack/image/upload/v1655102148/tiketjauhar/user/opkiyvpmeejfdjbk8iba.jpg',
-              }}
-              style={styles.avatar}
-            />
+            {data.image === 'null' ? (
+              <Image
+                source={{
+                  uri: 'https://res.cloudinary.com/fazztrack/image/upload/v1655621667/tiketjauhar/user/images_qygn7n.jpg',
+                }}
+                style={styles.avatar}
+              />
+            ) : (
+              <Image
+                source={{
+                  uri: `https://res.cloudinary.com/fazztrack/image/upload/v1655102148/${data.image}`,
+                }}
+                style={styles.avatar}
+              />
+            )}
             <View style={styles.biodata}>
-              <Text style={styles.title}>Jauhar maknun</Text>
-              <Text style={styles.caption}>085155405031</Text>
+              <Text style={styles.title}>{data.name}</Text>
+              <Text style={styles.caption}>
+                {data.noTelp === '' ? 'number phone not add' : data.noTelp}
+              </Text>
             </View>
           </View>
         </TouchableOpacity>

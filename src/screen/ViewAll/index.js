@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Footer from '../../component/footer';
-// import axios from '../../utils/axios';
+import {useDispatch} from 'react-redux';
+import {getAllMovie} from '../../store/action/movie';
 import SelectDropdown from 'react-native-select-dropdown';
 import Icon from 'react-native-vector-icons/Feather';
 import {
@@ -13,6 +14,7 @@ import {
   TextInput,
   Image,
   RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 
 const wait = timeout => {
@@ -20,30 +22,49 @@ const wait = timeout => {
 };
 
 function ViewAll(props) {
+  //filering
   const [search, setSearch] = useState('');
   const [sorting, setSorting] = useState('sort');
-  const [refreshing, setRefreshing] = useState(false);
-  const [page, setPage] = useState(1);
+  const [sorting2, setSorting2] = useState('');
   const sort = ['ID movie', 'A to Z', 'Z to A'];
   const [monthfil, setMonthfil] = useState('');
 
-  const data = [
-    {movieId: 1, name: 'Spiderman: no way home'},
-    {movieId: 2, name: 'Dr Strange'},
-    {movieId: 3, name: 'Dora the lost city'},
-    {movieId: 4, name: 'Spongebob'},
-    {movieId: 5, name: 'Ambulance'},
-    {movieId: 6, name: 'Avanger: End Game'},
-    {movieId: 7, name: 'Spiderman: far from home'},
-    {movieId: 8, name: 'Dr Strang'},
-    {movieId: 9, name: 'The Car 2'},
-    {movieId: 10, name: 'One Piece film Red'},
-    {movieId: 11, name: 'Upin Ipin the movie'},
-  ];
+  //rendering
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  console.log(sorting);
-  console.log(search);
-  console.log(monthfil);
+  //pagination and data
+  const [data, setData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(4);
+  const [totalData, setTotalData] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    getData();
+  }, [page, sorting, monthfil, search]);
+  const getData = async () => {
+    try {
+      setLoading(true);
+      const result = await dispatch(
+        getAllMovie(page, limit, monthfil, search, sorting2),
+      );
+      if (result.value.data.data === null) {
+        setData([]);
+      } else {
+        setData(result.value.data.data);
+        setTotalData(result.value.data.pagination.totalData);
+        setTotalPage(result.value.data.pagination.totalPage);
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error.response);
+    }
+  };
+  console.log(data);
 
   const month = [
     {number: 1, title: 'Januari'},
@@ -61,6 +82,7 @@ function ViewAll(props) {
   ];
 
   const onRefresh = React.useCallback(() => {
+    getData();
     setSorting('sort');
     setSearch('');
     setMonthfil('');
@@ -69,8 +91,8 @@ function ViewAll(props) {
     wait(2000).then(() => setRefreshing(false));
   }, []);
 
-  const handleDetail = () => {
-    props.navigation.navigate('Detail');
+  const handleDetail = movieId => {
+    props.navigation.navigate('Detail', {movieId: movieId});
   };
   const handleMonth = e => {
     setMonthfil(`${e}`);
@@ -96,6 +118,15 @@ function ViewAll(props) {
           data={sort}
           onSelect={(selectedItem, index) => {
             setSorting(selectedItem);
+            if (selectedItem === 'ID movie') {
+              setSorting2('id');
+            } else if (selectedItem === 'A to Z') {
+              setSorting2('name ASC');
+            } else if (selectedItem === 'Z to A') {
+              setSorting2('name DESC');
+            } else {
+              setSorting2('');
+            }
           }}
           buttonTextAfterSelection={() => {
             return sorting;
@@ -142,31 +173,37 @@ function ViewAll(props) {
         ))}
       </ScrollView>
       <View style={view.row}>
-        {data
-          .filter((item, idx) => idx >= 4 * (page - 1) && idx < page * 4)
-          .map(item => (
-            <View style={view.movie} key={item.movieId}>
-              <Image
-                source={{
-                  uri: 'https://m.media-amazon.com/images/M/MV5BOTVhMzYxNjgtYzYwOC00MGIwLWJmZGEtMjgwMzgxMWUwNmRhXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_.jpg',
-                }}
-                style={view.card_image}
-              />
-              <Text style={view.movie_title}>
-                {item.name.length > 15
-                  ? item.name.substring(0, 12) + '...'
-                  : item.name}
-              </Text>
-              <Text style={view.movie_category}>Adventure</Text>
-              <View style={(view.button, {width: 100})}>
+        {data.map(item => (
+          <View style={view.movie} key={item.id}>
+            <Image
+              source={{
+                uri: `https://res.cloudinary.com/fazztrack/image/upload/v1655471995/${item.image}`,
+              }}
+              style={view.card_image}
+            />
+            <Text style={view.movie_title}>
+              {item.name.length > 15
+                ? item.name.substring(0, 12) + '...'
+                : item.name}
+            </Text>
+            <Text style={view.movie_category}>
+              {item.category.length > 13
+                ? item.category.substring(0, 11) + '...'
+                : item.category}
+            </Text>
+            <View style={(view.button, {width: 100})}>
+              {loading === true ? (
+                <ActivityIndicator size="large" color="#5F2EEA" />
+              ) : (
                 <Button
                   title="Detail"
                   color={'#5F2EEA'}
-                  onPress={handleDetail}
+                  onPress={() => handleDetail(item.id)}
                 />
-              </View>
+              )}
             </View>
-          ))}
+          </View>
+        ))}
       </View>
       <View style={view.page}>
         <TouchableOpacity
@@ -175,11 +212,17 @@ function ViewAll(props) {
           <Text style={view.pagetext}>previous page..</Text>
         </TouchableOpacity>
         <View style={view.pageMid}>
-          <Text style={view.pagetext}>{page}</Text>
+          {loading === true ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : (
+            <View>
+              <Text style={view.pagetext}>{page}</Text>
+            </View>
+          )}
         </View>
         <TouchableOpacity
-          onPress={page >= data.length / 4 ? () => '' : () => setPage(page + 1)}
-          style={page >= data.length / 4 ? view.pageN : view.pageA}>
+          onPress={page >= totalPage ? () => '' : () => setPage(page + 1)}
+          style={page >= totalPage ? view.pageN : view.pageA}>
           <Text style={view.pagetext}>Next Page..</Text>
         </TouchableOpacity>
       </View>
