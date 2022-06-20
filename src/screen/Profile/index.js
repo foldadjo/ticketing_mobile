@@ -3,6 +3,7 @@ import Footer from '../../component/footer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {useDispatch} from 'react-redux';
+import {getBookingByUserId} from '../../store/action/booking';
 import {
   getUser,
   updateProfile,
@@ -22,6 +23,7 @@ import {
   Modal,
   RefreshControl,
   ActivityIndicator,
+  FlatList,
 } from 'react-native';
 
 const wait = timeout => {
@@ -31,7 +33,6 @@ const wait = timeout => {
 function Profile(props) {
   //form
   const [id, setId] = useState('');
-  const [photo, setPhoto] = useState('null');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [noTelp, setNoTelp] = useState('');
@@ -51,6 +52,8 @@ function Profile(props) {
   const [modalVisible, setModalVisible] = useState(false);
   //rendering
   const [loading, setLoading] = useState(false);
+  const [loadingImg, setLoadingImg] = useState(false);
+  const [loadingPass, setLoadingPass] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   //data
   const [data, setData] = useState({
@@ -58,11 +61,13 @@ function Profile(props) {
     image: 'null',
     noTelp: '',
   });
+  const [dataHistory, setDataHistory] = useState([]);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     handleUser();
-  }, []);
+  }, [refreshing, loading, loadingImg, loadingPass]);
   const handleUser = async () => {
     try {
       const userId = await AsyncStorage.getItem('id');
@@ -73,15 +78,35 @@ function Profile(props) {
   };
 
   const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
     setFirstName('');
     setLastName('');
     setNoTelp('');
     setPass('');
     setNewPass('');
-    setPhoto(null);
-    setRefreshing(true);
+    setPage(1);
+    setLast(false);
     wait(2000).then(() => setRefreshing(false));
   }, []);
+
+  const changePicture = async file => {
+    try {
+      setLoadingImg(true);
+      const fdata = new FormData();
+      fdata.append('image', {
+        uri: file.assets[0].uri,
+        type: file.assets[0].type,
+        name: file.assets[0].fileName,
+      });
+      const result = await dispatch(updateImage(id, fdata));
+      alert(result.value.data.msg);
+      setData({...data, image: result.value.data.data.image});
+      setLoadingImg(false);
+    } catch (error) {
+      setLoading(false);
+      console.log('error');
+    }
+  };
 
   const handleChoosePhoto = async () => {
     await launchImageLibrary({noData: true}, response => {
@@ -91,7 +116,9 @@ function Profile(props) {
           if (response.assets[0].fileSize > 1000000) {
             alert("image size can't be more than 1mb");
           } else {
-            setPhoto(URL.createObjectURL(response));
+            // setPhoto();
+            console.log(response);
+            changePicture(response);
           }
         }
       } catch (error) {
@@ -109,21 +136,14 @@ function Profile(props) {
             if (response.assets[0].fileSize > 1000000) {
               alert("image size can't be more than 1mb");
             } else {
-              setPhoto(URL.createObjectURL(response));
-              console.log(URL.createObjectURL(response));
+              // setPhoto();
+              changePicture(response);
             }
           }
         } catch (error) {
           console.log(error);
         }
       });
-      if (photo !== 'null') {
-        const result = await dispatch(updateImage(id, photo));
-        console.log(result.value.data.data.image);
-        setData(...data, {image: result.value.data.data.image});
-      } else {
-        alert('Change picture failed');
-      }
       setModalVisible(false);
     } catch (error) {
       console.log(error.response);
@@ -133,14 +153,14 @@ function Profile(props) {
   const deletePicture = async () => {
     try {
       setModalVisible(false);
-      setLoading(true);
+      setLoadingImg(true);
       const result = await dispatch(deleteImage(id));
-      setPhoto(null);
-      setData(...data, {image: 'null'});
-      setLoading(false);
+      // setPhoto(null);
+      setData({...data, image: 'null'});
+      setLoadingImg(false);
       alert(result.value.data.msg);
     } catch (error) {
-      setLoading(false);
+      setLoadingImg(false);
       alert('image is null');
       console.log(error);
     }
@@ -198,16 +218,18 @@ function Profile(props) {
   }, [pass, newPass]);
   const handleChangePassword = async e => {
     try {
-      setLoading(true);
+      setLoadingPass(true);
       if (pass === '' || newPass === '') {
         alert('form change password is required');
       } else {
         const result = await dispatch(updatePassword(id, formPassword));
         alert(result.value.data.msg);
+        setPass('');
+        setNewPass('');
       }
-      setLoading(false);
+      setLoadingPass(false);
     } catch (error) {
-      setLoading(false);
+      setLoadingPass(false);
       alert(error.response.value.data.msg);
       console.log(error.response);
     }
@@ -223,8 +245,64 @@ function Profile(props) {
     } catch (error) {}
   };
 
-  const handleTicket = () => {
-    props.navigation.navigate('Ticket');
+  // Order History
+
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(2);
+  const [totalPage, setTotalPage] = useState(2);
+  const [last, setLast] = useState(false);
+  const [loadMore, setLoadMore] = useState(false);
+
+  useEffect(() => {
+    handleHistory(page, limit);
+  }, [page]);
+  const handleHistory = async (pages, limited) => {
+    try {
+      if (page <= totalPage) {
+        setLoading(true);
+        setLast(false);
+        const userId = await AsyncStorage.getItem('id');
+        const result = await dispatch(
+          getBookingByUserId(userId, pages, limited),
+        );
+        if (page === 1) {
+          setDataHistory(result.value.data.data);
+          console.log(result.value.data.data);
+        } else if (page > 1 && page <= totalPage) {
+          setDataHistory([...dataHistory, ...result.value.data.data]);
+        }
+        setTotalPage(result.value.data.pagination.totalPage);
+        setLoading(false);
+        setLoadMore(false);
+      } else {
+        setLast(true);
+        setLoading(false);
+        setLoadMore(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      setLoadMore(false);
+    }
+  };
+
+  const handleLoadMore = async () => {
+    if (!loadMore) {
+      const newPage = page + 1;
+      await setLoadMore(true);
+      if (newPage <= totalPage + 1) {
+        await setPage(newPage);
+      } else {
+        setLast(true);
+        setLoadMore(false);
+        await setPage(page);
+      }
+    }
+  };
+
+  console.log(page);
+
+  const handleTicket = index => {
+    props.navigation.navigate('Ticket', {dataHistory: dataHistory[index]});
   };
 
   return (
@@ -280,7 +358,7 @@ function Profile(props) {
         </View>
       </View>
       <ScrollView
-        style={profile.container}
+        style={menu === true ? profile.container : ''}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
@@ -290,211 +368,244 @@ function Profile(props) {
           />
         }>
         <View style={menu === true ? profile.bottom : profile.dn}>
-          <View style={profile.flex}>
-            <View style={profile.carduser}>
-              <Text style={profile.head_card}>INFO</Text>
-              <View style={profile.carduser_item}>
-                <TouchableOpacity onPress={() => setModalVisible(true)}>
-                  {data.image === 'null' ? (
-                    <Image
-                      source={{
-                        uri: 'https://res.cloudinary.com/fazztrack/image/upload/v1655621667/tiketjauhar/user/images_qygn7n.jpg',
-                      }}
-                      style={profile.avatar}
-                    />
+          <View>
+            <View style={profile.flex}>
+              <View style={profile.carduser}>
+                <Text style={profile.head_card}>INFO</Text>
+                <View style={profile.carduser_item}>
+                  {loadingImg === true ? (
+                    <View style={profile.avatarLoad}>
+                      <ActivityIndicator size="large" color={'#5F2EEA'} />
+                    </View>
                   ) : (
-                    <Image
-                      source={{
-                        uri: `https://res.cloudinary.com/fazztrack/image/upload/v1655102148/${data.image}`,
-                      }}
-                      style={profile.avatar}
-                    />
+                    <TouchableOpacity onPress={() => setModalVisible(true)}>
+                      {data.image === 'null' ? (
+                        <Image
+                          source={{
+                            uri: 'https://res.cloudinary.com/fazztrack/image/upload/v1655621667/tiketjauhar/user/images_qygn7n.jpg',
+                          }}
+                          style={profile.avatar}
+                        />
+                      ) : (
+                        <Image
+                          source={{
+                            uri: `https://res.cloudinary.com/fazztrack/image/upload/v1655102148/${data.image}`,
+                          }}
+                          style={profile.avatar}
+                        />
+                      )}
+                    </TouchableOpacity>
                   )}
-                </TouchableOpacity>
-                <Text style={profile.textname}>{data.name}</Text>
-                <Text style={profile.tel}>
-                  {data.noTelp === '' ? 'number phone not add' : data.noTelp}
-                </Text>
+                  <Text style={profile.textname}>{data.name}</Text>
+                  <Text style={profile.tel}>
+                    {data.noTelp === '' ? 'number phone not add' : data.noTelp}
+                  </Text>
+                  <View style={profile.hr1}>
+                    <View style={profile.hr} />
+                  </View>
+                  <View style={profile.btn}>
+                    <View style={profile.buttonlogout}>
+                      <Button
+                        title="Logout"
+                        color={'#5F2EEA'}
+                        onPress={handleLogout}
+                      />
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View style={profile.head}>
+              <Text style={profile.head_name}>Account Setting</Text>
+            </View>
+            <View style={profile.flex}>
+              <View style={profile.carduser}>
+                <View>
+                  <Text style={profile.head_card}>Detail Information</Text>
+                </View>
                 <View style={profile.hr1}>
                   <View style={profile.hr} />
                 </View>
+                <View>
+                  <Text style={profile.name}> First Name </Text>
+                  <TextInput
+                    placeholder="Write your first name"
+                    style={profile.form}
+                    onChangeText={newText => setFirstName(newText)}
+                    defaultValue={firstName}
+                  />
+                </View>
+                <View>
+                  <Text style={profile.name}> Last Name </Text>
+                  <TextInput
+                    placeholder="Write your last name"
+                    style={profile.form}
+                    onChangeText={newText => setLastName(newText)}
+                    defaultValue={lastName}
+                  />
+                </View>
+                <View>
+                  <Text style={profile.name}> Phone Number </Text>
+                  <TextInput
+                    placeholder="Write your phone number"
+                    autoComplete="tel"
+                    keyboardType="numeric"
+                    maxLength={15}
+                    style={profile.form}
+                    onChangeText={newText => setNoTelp(newText)}
+                    defaultValue={noTelp}
+                  />
+                </View>
+              </View>
+            </View>
+            <View style={profile.btn}>
+              <View style={profile.button}>
+                {loading === true ? (
+                  <ActivityIndicator size="large" color="white" />
+                ) : (
+                  <Button
+                    title="Update Change"
+                    color={'#5F2EEA'}
+                    onPress={handleChangeProfile}
+                  />
+                )}
+              </View>
+            </View>
+            <View style={profile.flex}>
+              <View style={profile.cardpassword}>
+                <View>
+                  <Text style={profile.head_card}>Account and Privacy</Text>
+                </View>
+                <View style={profile.hr1}>
+                  <View style={profile.hr} />
+                </View>
+                <View>
+                  <Text style={profile.name}> New Password </Text>
+                  <TextInput
+                    placeholder="change password"
+                    autoComplete="password-new"
+                    secureTextEntry={true}
+                    style={profile.form}
+                    onChangeText={newText => setPass(newText)}
+                    defaultValue={pass}
+                  />
+                </View>
+                <View>
+                  <Text style={profile.name}> Confirm </Text>
+                  <TextInput
+                    placeholder="confirm your password"
+                    autoComplete="password-new"
+                    secureTextEntry={true}
+                    style={profile.form}
+                    onChangeText={newText => setNewPass(newText)}
+                    defaultValue={newPass}
+                  />
+                </View>
+              </View>
+            </View>
+            <View style={profile.btn}>
+              <View style={profile.button}>
+                {loadingPass === true ? (
+                  <ActivityIndicator size="large" color="white" />
+                ) : (
+                  <Button
+                    title="Update Change"
+                    color={'#5F2EEA'}
+                    onPress={handleChangePassword}
+                  />
+                )}
+              </View>
+            </View>
+          </View>
+        </View>
+        <View style={menu === true ? '' : {display: 'none'}}>
+          <Footer {...props} />
+        </View>
+      </ScrollView>
+      <FlatList
+        data={dataHistory}
+        style={menu === false ? profile.container2 : profile.dn}
+        keyExtractor={item => item.id}
+        renderItem={({item, index}) => (
+          <View style={menu === false ? profile.bottom : profile.dn}>
+            <View style={profile.flex}>
+              <View style={profile.cardhistory}>
+                <View>
+                  <Image
+                    source={
+                      item.premiere !== 'hiflix'
+                        ? item.premiere !== 'Ebu.Id'
+                          ? require('../../assets/cineone.png')
+                          : require('../../assets/ebu.png')
+                        : require('../../assets/hiflix.png')
+                    }
+                    style={profile.card_premiere}
+                  />
+                  <Text style={profile.date}>
+                    {new Date(item.dateBooking.split('T')[0]).toDateString()} -{' '}
+                    {item.timeBooking.split(':')[0]}
+                    :00
+                  </Text>
+                  <Text style={profile.textname}>
+                    {item.name.length > 22
+                      ? item.name.substring(0, 19) + '...'
+                      : item.name}
+                  </Text>
+                  <View style={profile.hr1}>
+                    <View style={profile.hr} />
+                  </View>
+                </View>
                 <View style={profile.btn}>
-                  <View style={profile.buttonlogout}>
+                  <View
+                    style={
+                      item.statusUsed === 'Active'
+                        ? profile.button1
+                        : profile.button2
+                    }>
                     <Button
-                      title="Logout"
-                      color={'#5F2EEA'}
-                      onPress={handleLogout}
+                      title="View Ticket"
+                      color={item.statusUsed === 'Active' ? 'green' : 'grey'}
+                      onPress={() => handleTicket(index)}
                     />
                   </View>
                 </View>
               </View>
             </View>
           </View>
-          <View style={profile.head}>
-            <Text style={profile.head_name}>Account Setting</Text>
-          </View>
-          <View style={profile.flex}>
-            <View style={profile.carduser}>
-              <View>
-                <Text style={profile.head_card}>Detail Information</Text>
-              </View>
-              <View style={profile.hr1}>
-                <View style={profile.hr} />
-              </View>
-              <View>
-                <Text style={profile.name}> First Name </Text>
-                <TextInput
-                  placeholder="Write your first name"
-                  style={profile.form}
-                  onChangeText={newText => setFirstName(newText)}
-                  defaultValue={firstName}
-                />
-              </View>
-              <View>
-                <Text style={profile.name}> Last Name </Text>
-                <TextInput
-                  placeholder="Write your last name"
-                  style={profile.form}
-                  onChangeText={newText => setLastName(newText)}
-                  defaultValue={lastName}
-                />
-              </View>
-              <View>
-                <Text style={profile.name}> Phone Number </Text>
-                <TextInput
-                  placeholder="Write your phone number"
-                  autoComplete="tel"
-                  keyboardType="numeric"
-                  maxLength={15}
-                  style={profile.form}
-                  onChangeText={newText => setNoTelp(newText)}
-                  defaultValue={noTelp}
-                />
-              </View>
+        )}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['#5F2EEA', '#D6D8E7']}
+          />
+        }
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.1}
+        ListFooterComponent={() =>
+          last === false ? (
+            <View style={profile.container2}>
+              <ActivityIndicator size={'large'} color={'#5F2EEA'} />
             </View>
-          </View>
-          <View style={profile.btn}>
-            <View style={profile.button}>
-              {loading === true ? (
-                <ActivityIndicator size="large" color="white" />
-              ) : (
-                <Button
-                  title="Update Change"
-                  color={'#5F2EEA'}
-                  onPress={handleChangeProfile}
-                />
-              )}
-            </View>
-          </View>
-          <View style={profile.flex}>
-            <View style={profile.cardpassword}>
-              <View>
-                <Text style={profile.head_card}>Account and Privacy</Text>
-              </View>
-              <View style={profile.hr1}>
-                <View style={profile.hr} />
-              </View>
-              <View>
-                <Text style={profile.name}> New Password </Text>
-                <TextInput
-                  placeholder="change password"
-                  autoComplete="password-new"
-                  secureTextEntry={true}
-                  style={profile.form}
-                  onChangeText={newText => setPass(newText)}
-                  defaultValue={pass}
-                />
-              </View>
-              <View>
-                <Text style={profile.name}> Confirm </Text>
-                <TextInput
-                  placeholder="confirm your password"
-                  autoComplete="password-new"
-                  secureTextEntry={true}
-                  style={profile.form}
-                  onChangeText={newText => setNewPass(newText)}
-                  defaultValue={newPass}
-                />
-              </View>
-            </View>
-          </View>
-          <View style={profile.btn}>
-            <View style={profile.button}>
-              {loading === true ? (
-                <ActivityIndicator size="large" color="white" />
-              ) : (
-                <Button
-                  title="Update Change"
-                  color={'#5F2EEA'}
-                  onPress={handleChangePassword}
-                />
-              )}
-            </View>
-          </View>
-        </View>
-        <View style={menu === false ? profile.bottom : profile.dn}>
-          <View style={profile.flex}>
-            <View style={profile.cardhistory}>
-              <View>
-                <Image
-                  source={require('../../assets/ebu.png')}
-                  style={profile.card_premiere}
-                />
-                <Text style={profile.date}>
-                  Tuesday, 07 July 2020 - 04:30pm
-                </Text>
-                <Text style={profile.textname}>Spiderman: Homecoming</Text>
-                <View style={profile.hr1}>
-                  <View style={profile.hr} />
-                </View>
-              </View>
-              <View style={profile.btn}>
-                <View style={profile.button1}>
-                  <Button
-                    title="Update Change"
-                    color={'green'}
-                    onPress={handleTicket}
-                  />
-                </View>
-              </View>
-            </View>
-          </View>
-          <View style={profile.flex}>
-            <View style={profile.cardhistory}>
-              <View>
-                <Image
-                  source={require('../../assets/cineone.png')}
-                  style={profile.card_premiere}
-                />
-                <Text style={profile.date}>
-                  Tuesday, 07 July 2020 - 04:30pm
-                </Text>
-                <Text style={profile.textname}> Avanger: End Game </Text>
-                <View style={profile.hr1}>
-                  <View style={profile.hr} />
-                </View>
-              </View>
-              <View style={profile.btn}>
-                <View style={profile.button2}>
-                  <Button
-                    title="Update Change"
-                    color={'grey'}
-                    onPress={handleTicket}
-                  />
-                </View>
-              </View>
-            </View>
-          </View>
-        </View>
-        <Footer {...props} />
-      </ScrollView>
+          ) : (
+            <Footer {...props} />
+          )
+        }
+      />
     </View>
   );
 }
 
 const profile = StyleSheet.create({
   container: {
-    paddingBottom: 50,
+    backgroundColor: '#F5F6F8',
+    marginBottom: 10,
+    paddingBottom: 0,
+  },
+  container2: {
+    paddingTop: 20,
+    paddingBottom: 120,
+    marginBottom: 30,
     backgroundColor: '#F5F6F8',
   },
   bottom: {
@@ -573,6 +684,14 @@ const profile = StyleSheet.create({
     borderRadius: 180,
     marginVertical: 10,
   },
+  avatarLoad: {
+    width: 180,
+    height: 180,
+    borderRadius: 180,
+    marginVertical: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   textname: {
     fontWeight: '600',
     fontSize: 18,
@@ -623,7 +742,8 @@ const profile = StyleSheet.create({
   cardhistory: {
     height: 240,
     width: 290,
-    marginTop: 30,
+    marginTop: 5,
+    marginBottom: 5,
     padding: 30,
     backgroundColor: 'white',
     borderRadius: 15,

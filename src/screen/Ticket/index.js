@@ -3,28 +3,50 @@ import Footer from '../../component/footer';
 import BarcodeCreatorViewManager, {
   BarcodeFormat,
 } from 'react-native-barcode-creator';
-// import axios from '../../utils/axios';
+import {useDispatch} from 'react-redux';
+import {updateStatusBooking, getBookingById} from '../../store/action/booking';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  Button,
   ScrollView,
-  TextInput,
-  Image,
 } from 'react-native';
 
 function Ticket(props) {
-  const [status, setStatus] = useState('active');
+  const [status, setStatus] = useState('Active');
+  const [seat, setSeat] = useState([]);
+  const dataTicket = props.route.params.dataHistory;
+  const dispatch = useDispatch();
 
-  const handleStatus = () => {
-    if (status === 'active') {
-      setStatus('notActive');
-    } else {
-      setStatus('active');
-    }
+  console.log(dataTicket);
+
+  useEffect(() => {
+    getSeatBooking();
+  }, [props]);
+  const getSeatBooking = async () => {
+    try {
+      const result = await dispatch(getBookingById(dataTicket.id));
+      if (result.value.data.data.statusUsed === 'Active') {
+        alert('barcode is Active. scan the barcode');
+      } else {
+        alert('barcode has been scanned');
+      }
+      setStatus(result.value.data.data.statusUsed);
+      setSeat(result.value.data.data.seat);
+    } catch (error) {}
   };
+
+  const handleStatus = async () => {
+    try {
+      console.log(dataTicket.id);
+      const result = await dispatch(updateStatusBooking(dataTicket.id));
+      setStatus(result.value.data.data.statusUsed);
+      alert(result.value.data.msg);
+      console.log(result);
+    } catch (error) {}
+  };
+
   return (
     <View>
       <ScrollView style={ticket.container} showsVerticalScrollIndicator={false}>
@@ -33,7 +55,7 @@ function Ticket(props) {
             <View style={ticket.cardbarcode}>
               <TouchableOpacity style={ticket.flex} onPress={handleStatus}>
                 <BarcodeCreatorViewManager
-                  value={'100'}
+                  value={dataTicket.id}
                   background={'#FFFFFF'}
                   foregroundColor={'#000000'}
                   format={BarcodeFormat.QR}
@@ -43,12 +65,12 @@ function Ticket(props) {
             </View>
           </View>
           <View style={ticket.flex}>
-            <View style={status === 'active' ? ticket.hr1 : ticket.hr2}>
+            <View style={status === 'Active' ? ticket.hr1 : ticket.hr2}>
               <View style={ticket.hr} />
             </View>
           </View>
           <View style={ticket.flex}>
-            <View style={status === 'active' ? ticket.hr3 : ticket.hr1}>
+            <View style={status === 'Active' ? ticket.hr3 : ticket.hr1}>
               <View style={ticket.hr} />
             </View>
           </View>
@@ -57,31 +79,47 @@ function Ticket(props) {
               <View style={ticket.row}>
                 <View style={ticket.left}>
                   <Text style={ticket.title}>Movie</Text>
-                  <Text style={ticket.text}>Spiderman</Text>
+                  <Text style={ticket.text}>
+                    {dataTicket.name.length > 13
+                      ? dataTicket.name.substring(0, 10) + '...'
+                      : dataTicket.name}
+                  </Text>
                 </View>
                 <View style={ticket.right}>
                   <Text style={ticket.title}>Category</Text>
-                  <Text style={ticket.text}>Action</Text>
+                  <Text style={ticket.text}>
+                    {' '}
+                    {dataTicket.category.length > 10
+                      ? dataTicket.category.substring(0, 7) + '...'
+                      : dataTicket.category}
+                  </Text>
                 </View>
               </View>
               <View style={ticket.row}>
                 <View style={ticket.left}>
                   <Text style={ticket.title}>Date</Text>
-                  <Text style={ticket.text}>07-06-2022</Text>
+                  <Text style={ticket.text}>
+                    {new Date(dataTicket.dateBooking.split('T')[0])
+                      .toDateString()
+                      .substring(4, 100)}
+                  </Text>
                 </View>
                 <View style={ticket.right}>
                   <Text style={ticket.title}>Time</Text>
-                  <Text style={ticket.text}>17.00</Text>
+                  <Text style={ticket.text}>
+                    {dataTicket.timeBooking.split(':')[0]}
+                    :00
+                  </Text>
                 </View>
               </View>
               <View style={ticket.row}>
                 <View style={ticket.left}>
                   <Text style={ticket.title}>Count</Text>
-                  <Text style={ticket.text}>5 pcs</Text>
+                  <Text style={ticket.text}>{dataTicket.totalTicket} pcs</Text>
                 </View>
                 <View style={ticket.right}>
                   <Text style={ticket.title}>Seat</Text>
-                  <Text style={ticket.text}>C6, C7, C8, C7, C8</Text>
+                  <Text style={ticket.text}>{seat.join(', ')}</Text>
                 </View>
               </View>
               <View style={ticket.row2}>
@@ -89,7 +127,7 @@ function Ticket(props) {
                   <Text style={ticket.text2}>Total</Text>
                 </View>
                 <View>
-                  <Text style={ticket.text2}>Rp.250000</Text>
+                  <Text style={ticket.text2}>Rp.{dataTicket.totalPayment}</Text>
                 </View>
               </View>
             </View>

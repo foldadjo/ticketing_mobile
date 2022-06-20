@@ -29,7 +29,6 @@ const booking = (state = initialState, action) => {
         isLoading: false,
         isError: true,
         data: [],
-        pageInfo: {},
         msg: action.payload.response.data,
       };
 
@@ -55,7 +54,6 @@ const booking = (state = initialState, action) => {
         isLoading: false,
         isError: true,
         data: [],
-        pageInfo: {},
         msg: action.payload.response.data,
       };
 
@@ -81,7 +79,6 @@ const booking = (state = initialState, action) => {
         isLoading: false,
         isError: true,
         data: [],
-        pageInfo: {},
         msg: action.payload.response.data,
       };
 
@@ -121,7 +118,6 @@ const booking = (state = initialState, action) => {
         ...state,
         isLoading: false,
         isError: false,
-        data: {...action.payload.data.data},
         msg: action.payload.data.msg,
       };
 

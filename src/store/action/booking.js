@@ -16,10 +16,10 @@ export const getBookingById = bookingId => {
   };
 };
 
-export const getBookingByUserId = userId => {
+export const getBookingByUserId = (userId, page, limit) => {
   return {
     type: 'GET_BOOKING_BY_USER_ID',
-    payload: axios.get(`/booking/user/${userId}`),
+    payload: axios.get(`/booking/user/${userId}?page=${page}&limit=${limit}`),
   };
 };
 
@@ -30,9 +30,9 @@ export const createBooking = form => {
   };
 };
 
-export const updateStatusBooking = form => {
+export const updateStatusBooking = id => {
   return {
     type: 'UPDATE_STATUS_BOOKING',
-    payload: axios.patch(`/booking`, form),
+    payload: axios.patch(`/booking/${id}`),
   };
 };

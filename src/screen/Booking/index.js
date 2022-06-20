@@ -10,6 +10,7 @@ import {
   Button,
   ScrollView,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 
 function Booking(props) {
@@ -18,6 +19,7 @@ function Booking(props) {
   const price = props.route.params.data[0].price;
   const dataSchedule = props.route.params.dataSchedule;
   const dataSchedule2 = props.route.params.data[0];
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   const [form, setForm] = useState({
@@ -35,6 +37,7 @@ function Booking(props) {
   }, []);
   const getReservedSeat = async () => {
     try {
+      setLoading(true);
       console.log(
         dataSchedule.scheduleId,
         dataSchedule.timeBooking,
@@ -53,7 +56,9 @@ function Booking(props) {
       } else {
         setReservedSeat(result.value.data.data);
       }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log(error.response);
     }
   };
@@ -136,52 +141,58 @@ function Booking(props) {
           <View style={booking.flex}>
             <View style={booking.card}>
               <View style={booking.card_head}>
-                <View style={booking.screen}>
-                  <View style={booking.seat}>
-                    {seatLeft.map(row => (
-                      <View key={row.number}>
-                        {seatRow.map(item => (
-                          <TouchableOpacity
-                            key={item.row}
-                            style={
-                              selectedSeat.includes(item.row + row.number)
-                                ? booking.seat_b
-                                : reservedSeat.includes(item.row + row.number)
-                                ? booking.seat_c
-                                : booking.seat_a
-                            }
-                            onPress={() =>
-                              handlePressSeat(item.row + row.number)
-                            }>
-                            <Text> </Text>
-                          </TouchableOpacity>
-                        ))}
-                      </View>
-                    ))}
+                {loading === true ? (
+                  <View style={booking.loading}>
+                    <ActivityIndicator size={'large'} color={'#5F2EEA'} />
                   </View>
-                  <View style={booking.seat}>
-                    {seatRight.map(row => (
-                      <View key={row.number}>
-                        {seatRow.map(item => (
-                          <TouchableOpacity
-                            key={item.row}
-                            style={
-                              selectedSeat.includes(item.row + row.number)
-                                ? booking.seat_b
-                                : reservedSeat.includes(item.row + row.number)
-                                ? booking.seat_c
-                                : booking.seat_a
-                            }
-                            onPress={() =>
-                              handlePressSeat(item.row + row.number)
-                            }>
-                            <Text> </Text>
-                          </TouchableOpacity>
-                        ))}
-                      </View>
-                    ))}
+                ) : (
+                  <View style={booking.screen}>
+                    <View style={booking.seat}>
+                      {seatLeft.map(row => (
+                        <View key={row.number}>
+                          {seatRow.map(item => (
+                            <TouchableOpacity
+                              key={item.row}
+                              style={
+                                selectedSeat.includes(item.row + row.number)
+                                  ? booking.seat_b
+                                  : reservedSeat.includes(item.row + row.number)
+                                  ? booking.seat_c
+                                  : booking.seat_a
+                              }
+                              onPress={() =>
+                                handlePressSeat(item.row + row.number)
+                              }>
+                              <Text> </Text>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+                      ))}
+                    </View>
+                    <View style={booking.seat}>
+                      {seatRight.map(row => (
+                        <View key={row.number}>
+                          {seatRow.map(item => (
+                            <TouchableOpacity
+                              key={item.row}
+                              style={
+                                selectedSeat.includes(item.row + row.number)
+                                  ? booking.seat_b
+                                  : reservedSeat.includes(item.row + row.number)
+                                  ? booking.seat_c
+                                  : booking.seat_a
+                              }
+                              onPress={() =>
+                                handlePressSeat(item.row + row.number)
+                              }>
+                              <Text> </Text>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+                      ))}
+                    </View>
                   </View>
-                </View>
+                )}
               </View>
               <View>
                 <Text style={booking.head_name}>Seating key</Text>
@@ -364,6 +375,14 @@ const booking = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     // alignItems: 'center',
+  },
+  loading: {
+    borderColor: '#5F2EEA',
+    borderWidth: 5,
+    borderRadius: 5,
+    width: 240,
+    height: 140,
+    justifyContent: 'center',
   },
   screen: {
     borderTopColor: '#5F2EEA',
