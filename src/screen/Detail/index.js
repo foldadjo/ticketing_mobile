@@ -142,7 +142,11 @@ function Detail(props) {
         <View style={detail.flex}>
           <Text style={detail.title}>Release date</Text>
           <Text style={detail.text}>
-            {dataMovie[0].releaseDate.split('T')[0]}
+            {`${new Date(dataMovie[0].releaseDate.split('T')[0]).getDay()} - ${
+              new Date(dataMovie[0].releaseDate.split('T')[0]).getMonth() + 1
+            } - ${new Date(
+              dataMovie[0].releaseDate.split('T')[0],
+            ).getFullYear()}`}
           </Text>
         </View>
         <View style={detail.flex}>
@@ -177,9 +181,7 @@ function Detail(props) {
         </View>
         <TouchableOpacity style={detail.date} onPress={() => setOpen(true)}>
           <View style={detail.flex5}>
-            <Text style={detail.text}>
-              {button === true ? `${date.toDateString()}` : 'Set a date'}
-            </Text>
+            <Text style={detail.text}>{`${date.toDateString()}`}</Text>
           </View>
           <View style={detail.flex2}>
             <Icon name="calendar" size={20} color={'black'} />

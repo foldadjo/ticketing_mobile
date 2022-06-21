@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import Footer from '../../component/footer';
 import {createBooking} from '../../store/action/booking';
+import Notification from '../../utils/notif';
 import {
   View,
   Text,
@@ -21,6 +22,20 @@ function Payment(props) {
   const [loading, setLoading] = useState(false);
   const dataBooking = props.route.params.dataBooking;
   const dispatch = useDispatch();
+  const date = new Date(
+    `${dataBooking.dateBooking}T${dataBooking.timeBooking}:00.000Z`,
+  );
+  const setNotification = {
+    title: 'your movie booking',
+    message: 'your movie will be play in 30 minutes later',
+    date: new Date(date - 30 * 1000 * 60),
+  };
+
+  console.log(date);
+  console.log(dataBooking);
+  console.log(new Date(date - 30 * 1000 * 60 - 7 * 1000 * 3600));
+  console.log(new Date(Date.now()));
+  console.log(setNotification);
 
   useEffect(() => {
     console.log(props.route.params);
@@ -30,6 +45,8 @@ function Payment(props) {
     try {
       setLoading(true);
       const result = await dispatch(createBooking(dataBooking));
+      console.log(setNotification);
+      await Notification.reminderMovieSchedule(setNotification);
       setLoading(false);
       props.navigation.navigate('Midtrans', {
         redirectUrl: result.value.data.data.redirectUrl,

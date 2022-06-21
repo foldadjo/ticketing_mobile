@@ -11,12 +11,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 
 function Ticket(props) {
   const [status, setStatus] = useState('Active');
   const [seat, setSeat] = useState([]);
   const dataTicket = props.route.params.dataHistory;
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   console.log(dataTicket);
@@ -26,25 +28,28 @@ function Ticket(props) {
   }, [props]);
   const getSeatBooking = async () => {
     try {
+      setLoading(true);
       const result = await dispatch(getBookingById(dataTicket.id));
-      if (result.value.data.data.statusUsed === 'Active') {
-        alert('barcode is Active. scan the barcode');
-      } else {
-        alert('barcode has been scanned');
-      }
       setStatus(result.value.data.data.statusUsed);
       setSeat(result.value.data.data.seat);
-    } catch (error) {}
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   const handleStatus = async () => {
     try {
+      setLoading(true);
       console.log(dataTicket.id);
       const result = await dispatch(updateStatusBooking(dataTicket.id));
       setStatus(result.value.data.data.statusUsed);
       alert(result.value.data.msg);
       console.log(result);
-    } catch (error) {}
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   return (
@@ -53,15 +58,31 @@ function Ticket(props) {
         <View style={ticket.bottom}>
           <View style={ticket.flex}>
             <View style={ticket.cardbarcode}>
-              <TouchableOpacity style={ticket.flex} onPress={handleStatus}>
-                <BarcodeCreatorViewManager
-                  value={dataTicket.id}
-                  background={'#FFFFFF'}
-                  foregroundColor={'#000000'}
-                  format={BarcodeFormat.QR}
-                  style={ticket.barcode}
-                />
-              </TouchableOpacity>
+              {loading === true ? (
+                <View>
+                  <ActivityIndicator style={ticket.barcode} size={'large'} />
+                </View>
+              ) : status === 'Active' ? (
+                <TouchableOpacity style={ticket.flex} onPress={handleStatus}>
+                  <BarcodeCreatorViewManager
+                    value={dataTicket.id}
+                    background={'#FFFFFF'}
+                    foregroundColor={'#000000'}
+                    format={BarcodeFormat.QR}
+                    style={ticket.barcode}
+                  />
+                </TouchableOpacity>
+              ) : (
+                <View style={ticket.flex}>
+                  <BarcodeCreatorViewManager
+                    value={dataTicket.id}
+                    background={'#FFFFFF'}
+                    foregroundColor={'#000000'}
+                    format={BarcodeFormat.QR}
+                    style={ticket.barcode}
+                  />
+                </View>
+              )}
             </View>
           </View>
           <View style={ticket.flex}>
