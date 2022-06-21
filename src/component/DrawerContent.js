@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
 import {getUser} from '../store/action/user';
+import {LINK_CLOUDINARY} from '@env';
 import {
   DrawerContentScrollView,
   DrawerItem,
@@ -50,14 +51,14 @@ function DrawerContent(props) {
             {data.image === 'null' ? (
               <Image
                 source={{
-                  uri: 'https://res.cloudinary.com/fazztrack/image/upload/v1655621667/tiketjauhar/user/images_qygn7n.jpg',
+                  uri: `https://res.cloudinary.com/fazztrack/image/upload/v1655102148/tiketjauhar/user/images_qygn7n.jpg`,
                 }}
                 style={styles.avatar}
               />
             ) : (
               <Image
                 source={{
-                  uri: `https://res.cloudinary.com/fazztrack/image/upload/v1655102148/${data.image}`,
+                  uri: `${LINK_CLOUDINARY}${data.image}`,
                 }}
                 style={styles.avatar}
               />

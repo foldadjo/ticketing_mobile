@@ -29,7 +29,7 @@ Website Application Hire Job | Frontend Repository
 
 ```sh
 URL_BACKEND: "https://tiketjauhar.herokuapp.com",
-URL_CLOUDINARY: "https://res.cloudinary.com/foldadjo",
+URL_CLOUDINARY: "https://res.cloudinary.com/fazztrack/image/upload/v1655102148/",
 ```
 
 7. Type `npx react-native run-android`
@@ -55,6 +55,7 @@ URL_CLOUDINARY: "https://res.cloudinary.com/foldadjo",
 - [launch-Camera/launch-Image-Library](https://github.com/react-native-image-picker/react-native-image-picker)
 - [push-notivication](https://www.npmjs.com/package/react-native-push-notification)
 - [firebase](https://console.firebase.google.com/)
+- [dotenv](https://www.npmjs.com/package/react-native-dotenv)
 
 ## License
 

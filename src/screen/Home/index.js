@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Footer from '../../component/footer';
 import {useDispatch} from 'react-redux';
 import {getAllMovie} from '../../store/action/movie';
+import {LINK_CLOUDINARY} from '@env';
 import {
   View,
   Text,
@@ -142,7 +143,7 @@ function Home(props) {
             <View style={home.movie} key={item.id}>
               <Image
                 source={{
-                  uri: `https://res.cloudinary.com/fazztrack/image/upload/v1655471995/${item.image}`,
+                  uri: `${LINK_CLOUDINARY}${item.image}`,
                 }}
                 style={home.card_image}
               />
@@ -219,7 +220,7 @@ function Home(props) {
             <View style={home.movie} key={item.id}>
               <Image
                 source={{
-                  uri: `https://res.cloudinary.com/fazztrack/image/upload/v1655471995/${item.image}`,
+                  uri: `${LINK_CLOUDINARY}${item.image}`,
                 }}
                 style={home.card_image}
               />

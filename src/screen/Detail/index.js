@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import {useDispatch} from 'react-redux';
 import {getAllSchedule} from '../../store/action/schedule';
 import {getMovieById} from '../../store/action/movie';
+import {LINK_CLOUDINARY} from '@env';
 import {
   View,
   Text,
@@ -128,7 +129,7 @@ function Detail(props) {
         <View style={detail.movie}>
           <Image
             source={{
-              uri: `https://res.cloudinary.com/fazztrack/image/upload/v1655471995/${dataMovie[0].image}`,
+              uri: `${LINK_CLOUDINARY}${dataMovie[0].image}`,
             }}
             style={detail.card_image}
           />
