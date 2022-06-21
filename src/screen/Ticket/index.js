@@ -5,6 +5,7 @@ import BarcodeCreatorViewManager, {
 } from 'react-native-barcode-creator';
 import {useDispatch} from 'react-redux';
 import {updateStatusBooking, getBookingById} from '../../store/action/booking';
+import Notification from '../../utils/notif';
 import {
   View,
   Text,
@@ -20,6 +21,12 @@ function Ticket(props) {
   const dataTicket = props.route.params.dataHistory;
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const setNotification = {
+    title: 'thank you',
+    message:
+      'thank you for your transaction, nikmati terus layanan kami dalam memesan tiket movie favorite anda, semoga hari hari anda selalu diberikan kebahagiaan oleh tuhan yang maha esa. terimakasih.',
+    date: new Date(Date.now() + 5 * 1000 - 7 * 1000 * 3600),
+  };
 
   console.log(dataTicket);
 
@@ -46,6 +53,7 @@ function Ticket(props) {
       setStatus(result.value.data.data.statusUsed);
       alert(result.value.data.msg);
       console.log(result);
+      await Notification.reminderMovieSchedule(setNotification);
       setLoading(false);
     } catch (error) {
       setLoading(false);

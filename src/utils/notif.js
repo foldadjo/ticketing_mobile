@@ -15,6 +15,19 @@ class notification {
       },
       created => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
     );
+    PushNotification.createChannel(
+      {
+        channelId: 'new-movie', // (required)
+        channelName: 'new movie', // (required)
+        channelDescription:
+          'a notivication for user when admmin post a new movie', // (optional) default: undefined.
+        // playSound: false, // (optional) default: true
+        // soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
+        // importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
+        // vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
+      },
+      created => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
+    );
   }
   reminderMovieSchedule({title, message, date}) {
     PushNotification.localNotificationSchedule({

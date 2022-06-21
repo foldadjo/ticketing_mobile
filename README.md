@@ -54,6 +54,7 @@ URL_CLOUDINARY: "https://res.cloudinary.com/foldadjo",
 - [List-Icon/feather](https://feathericons.com)
 - [launch-Camera/launch-Image-Library](https://github.com/react-native-image-picker/react-native-image-picker)
 - [push-notivication](https://www.npmjs.com/package/react-native-push-notification)
+- [firebase](https://console.firebase.google.com/)
 
 ## License
 
@@ -62,8 +63,11 @@ URL_CLOUDINARY: "https://res.cloudinary.com/foldadjo",
 ## 🔎 Preview Pages
 
 <span align="center">
-<a href="https://ibb.co/HzXSK08"><img src="https://i.ibb.co/VS31Ld4/Splash-Screen.png" alt="2022-06-11" border="0"></a>
+<a href="https://imgbb.com/"><img src="https://i.ibb.co/VS31Ld4/Splash-Screen.png" alt="Splash-Screen" border="0" /></a>
 <a href="https://ibb.co/pfCzwjz"><img src="https://i.ibb.co/fkmpFdp/Login.png" alt="08-06-2022-16-39-06-REC" border="0"></a>
+<a href="https://ibb.co/JvxfhY2"><img src="https://i.ibb.co/8rzWhy2/Screenshot-2022-06-22-00-23-09-10-73bc8a387918a6dc24391eace3f66458.jpg" alt="Screenshot-2022-06-22-00-23-09-10-73bc8a387918a6dc24391eace3f66458" border="0" /></a>
+<a href="https://ibb.co/SsjdSKr"><img src="https://i.ibb.co/TvfbyHL/Screenshot-2022-06-22-00-23-33-55-73bc8a387918a6dc24391eace3f66458.jpg" alt="Screenshot-2022-06-22-00-23-33-55-73bc8a387918a6dc24391eace3f66458" border="0" /></a>
+<a href="https://ibb.co/Yyk4Kqk"><img src="https://i.ibb.co/yYymMby/Screenshot-2022-06-22-00-22-50-27-73bc8a387918a6dc24391eace3f66458.jpg" alt="Screenshot-2022-06-22-00-22-50-27-73bc8a387918a6dc24391eace3f66458" border="0" /></a>
 <br>
 </span>
 
@@ -86,6 +90,8 @@ https://github.com/foldadjo/Ticketing_BE.git
 - [redux-promise-middleware](https://www.npmjs.com/package/redux-promise-middleware)
 - [redux-thunk](https://www.npmjs.com/package/redux-thunk)
 - [eslint](https://www.npmjs.com/package/eslint)
+- [local-notification](https://www.npmjs.com/package/react-native-local-push-notification)
+- [remote-notification](https://console.firebase.google.com/)
 
 <br>          |
 

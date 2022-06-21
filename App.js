@@ -19,6 +19,13 @@ PushNotification.configure({
   onNotification: function (notification) {
     console.log('NOTIFICATION:', notification);
 
+    PushNotification.localNotification({
+      channelId: 'new-movie',
+      title: notification.title,
+      message: notification.message,
+      bigPictureUrl: notification.bigPictureUrl,
+      largeIcon: notification.largeIcon,
+    });
     // process the notification
 
     // (required) Called when a remote is received or opened, or local notification is opened
@@ -56,8 +63,10 @@ PushNotification.configure({
    * - if you are not using remote notification or do not have Firebase installed, use this:
    *     requestPermissions: Platform.OS === 'ios'
    */
-  requestPermissions: false,
+  requestPermissions: true,
 });
+
+PushNotification.subscribeToTopic('new-movie');
 
 function App() {
   return (
