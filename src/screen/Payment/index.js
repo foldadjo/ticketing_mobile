@@ -28,7 +28,7 @@ function Payment(props) {
   const setNotification = {
     title: 'your movie booking',
     message: 'your movie will be play in 30 minutes later',
-    date: new Date(date - 30 * 1000 * 60),
+    date: new Date(date - 30 * 1000 * 60 - 7 * 1000 * 3600),
   };
 
   console.log(date);
@@ -45,15 +45,34 @@ function Payment(props) {
     try {
       setLoading(true);
       const result = await dispatch(createBooking(dataBooking));
-      console.log(setNotification);
-      await Notification.reminderMovieSchedule(setNotification);
+      if (date === NaN) {
+        const ErrorDateNotif = {
+          title: 'your movie booking',
+          message: '',
+          date: new Date(Date.now()),
+        };
+        Notification.reminderMovieSchedule(ErrorDateNotif);
+      } else if (
+        new Date(date - 30 * 1000 * 60 - 7 * 1000 * 3600) <=
+        new Date(Date.now())
+      ) {
+        const setNotificationNow = {
+          title: 'your movie booking',
+          message: 'your movie played. go to cinema now !!',
+          date: new Date(Date.now()),
+        };
+        Notification.reminderMovieSchedule(setNotificationNow);
+      } else {
+        Notification.reminderMovieSchedule(setNotification);
+      }
       setLoading(false);
       props.navigation.navigate('Midtrans', {
         redirectUrl: result.value.data.data.redirectUrl,
       });
     } catch (error) {
+      alert('reload your aplication an relogin');
       setLoading(false);
-      console.log(error.response);
+      console.log(error);
     }
   };
 

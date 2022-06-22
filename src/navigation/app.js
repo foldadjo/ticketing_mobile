@@ -42,11 +42,6 @@ function HomeNavigator() {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        component={Ticket}
-        name="Ticket"
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
         component={Midtrans}
         name="Midtrans"
         options={{headerShown: false}}
@@ -71,6 +66,11 @@ function ProfileNavigator() {
       <Stack.Screen
         component={Profile}
         name="Profile"
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        component={Ticket}
+        name="Ticket"
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -104,7 +104,7 @@ function AppNavigator() {
           drawerActiveTintColor: '#5F2EEA',
           header: props => <Header {...props} />,
           drawerIcon: ({size, color}) => (
-            <Icon name="book" size={size} color={color} />
+            <Icon name="film" size={size} color={color} />
           ),
         }}
       />

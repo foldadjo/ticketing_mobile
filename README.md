@@ -6,7 +6,7 @@
 
 ## About The Project
 
-Website Application Hire Job | Frontend Repository
+Mobile Application Ticketing | Front-End Repository
 
 ## Built With
 
@@ -28,8 +28,8 @@ Website Application Hire Job | Frontend Repository
 6. Add .env in nextConfig.js
 
 ```sh
-URL_BACKEND: "https://tiketjauhar.herokuapp.com",
-URL_CLOUDINARY: "https://res.cloudinary.com/fazztrack/image/upload/v1655102148/",
+LINK_BACKEND: "https://tiketjauhar.herokuapp.com",
+LINK_CLOUDINARY: "https://res.cloudinary.com/fazztrack/image/upload/v1655102148/",
 ```
 
 7. Type `npx react-native run-android`

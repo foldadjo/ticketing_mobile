@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {View, Text, Image, StyleSheet, ImageBackground} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const image = require('../../assets/ss.jpg');
+const jwt_decode = require('jwt-decode');
 
 function SpleshSreen(props) {
   useEffect(() => {
@@ -9,11 +10,17 @@ function SpleshSreen(props) {
   }, []);
   const cekToken = async () => {
     const token = await AsyncStorage.getItem('token');
-    setTimeout(() => {
+    setTimeout(async () => {
       if (token) {
-        props.navigation.navigate('AppScreen', {screen: 'HomeNavigator'});
+        const decoded = jwt_decode(token);
+        if (decoded.exp < Date.now() / 1000) {
+          await AsyncStorage.clear();
+          props.navigation.replace('AuthScreen');
+        } else {
+          props.navigation.replace('AppScreen', {screen: 'HomeNavigator'});
+        }
       } else {
-        props.navigation.navigate('AuthScreen');
+        props.navigation.replace('AuthScreen');
       }
     }, 3000);
   };
