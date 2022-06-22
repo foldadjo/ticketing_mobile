@@ -143,7 +143,7 @@ function Detail(props) {
         <View style={detail.flex}>
           <Text style={detail.title}>Release date</Text>
           <Text style={detail.text}>
-            {`${new Date(dataMovie[0].releaseDate.split('T')[0]).getDay()} - ${
+            {`${new Date(dataMovie[0].releaseDate.split('T')[0]).getDate()} - ${
               new Date(dataMovie[0].releaseDate.split('T')[0]).getMonth() + 1
             } - ${new Date(
               dataMovie[0].releaseDate.split('T')[0],
