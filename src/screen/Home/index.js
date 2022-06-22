@@ -315,13 +315,14 @@ const home = StyleSheet.create({
   viewAll_Text: {color: '#5F2EEA'},
   movie: {
     width: 160,
-    height: 300,
+    height: 320,
     backgroundColor: 'white',
     borderRadius: 10,
     borderColor: '#D6D8E7',
     borderWidth: 1,
     marginRight: 10,
     padding: 10,
+    paddingTop: 20,
     alignItems: 'center',
   },
   movie_title: {
