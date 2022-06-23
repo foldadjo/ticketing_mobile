@@ -60,6 +60,8 @@ LINK_CLOUDINARY: "https://res.cloudinary.com/fazztrack/image/upload/v1655102148/
 ## License
 
 © [Ticketing](https://github.com/foldadjo/ticketing_mobile.git)
+© [Publication]
+© [Privacy-Police](https://www.iubenda.com/privacy-policy/94477982)
 
 ## 🔎 Preview Pages
 
